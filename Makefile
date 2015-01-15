@@ -7,8 +7,8 @@ CU=/usr/local/cuda-6.5/bin/nvcc -arch=$(CUARCH)
 CCFLAGS=-c -Wall -$(OPT)
 CUFLAGS=-dc -$(OPT)
 
-CCSRC=main.cpp
-CUSRC=
+CCSRC=
+CUSRC=kernel.cu
 CCSRCDIR=src/cc
 CUSRCDIR=src/cu
 
