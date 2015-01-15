@@ -12,9 +12,18 @@
             <make-dep-projects/>
             <sourceRootList/>
             <confList>
-                <confElem>CUDA-Toolkit</confElem>
-                <confElem>CUDA-SDK</confElem>
+                <confElem>
+                    <name>CUDA-Toolkit</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>CUDA-SDK</name>
+                    <type>1</type>
+                </confElem>
             </confList>
+            <formatting>
+                <project-formatting-style>false</project-formatting-style>
+            </formatting>
         </data>
     </configuration>
 </project>

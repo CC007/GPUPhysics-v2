@@ -17,23 +17,25 @@ RANLIB=ranlib
 CC=nvcc
 CCC=nvcc
 CXX=nvcc
-FC=
-AS=
+FC=gfortran
+AS=as
 
 # Macros
 CND_PLATFORM=GNU+CUDA-Linux-x86
+CND_DLIB_EXT=so
 CND_CONF=CUDA-SDK
 CND_DISTDIR=dist
+CND_BUILDDIR=build
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
+OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/src/cc/main.o
 
 
 # C Compiler Flags
@@ -54,24 +56,24 @@ LDLIBSOPTIONS=-L../../NVIDIA_GPU_Computing_SDK/C/lib -L../../NVIDIA_GPU_Computin
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-CUDA-SDK.mk dist/CUDA-SDK/GNU+CUDA-Linux-x86/cuda-project
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2
 
-dist/CUDA-SDK/GNU+CUDA-Linux-x86/cuda-project: ${OBJECTFILES}
-	${MKDIR} -p dist/CUDA-SDK/GNU+CUDA-Linux-x86
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cuda-project ${OBJECTFILES} ${LDLIBSOPTIONS} 
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2: ${OBJECTFILES}
+	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/main.o: main.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/main.o main.cpp
+${OBJECTDIR}/src/cc/main.o: src/cc/main.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/cc
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/main.o src/cc/main.cpp
 
 # Subprojects
 .build-subprojects:
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
-	${RM} -r build/CUDA-SDK
-	${RM} dist/CUDA-SDK/GNU+CUDA-Linux-x86/cuda-project
+	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2
 
 # Subprojects
 .clean-subprojects:
