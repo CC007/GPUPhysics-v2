@@ -8,11 +8,27 @@
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
+      <logicalFolder name="input" displayName="input" projectFiles="true">
+        <itemPath>recources/input/test.input</itemPath>
+      </logicalFolder>
+      <logicalFolder name="map" displayName="map" projectFiles="true">
+        <itemPath>recources/map/Test1.dat</itemPath>
+        <itemPath>recources/map/Test2.dat</itemPath>
+        <itemPath>recources/map/mapsy.dat</itemPath>
+        <itemPath>recources/map/mapsy3.dat</itemPath>
+        <itemPath>recources/map/mapsy7.dat</itemPath>
+      </logicalFolder>
+      <logicalFolder name="output" displayName="output" projectFiles="true">
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>src/cc/main.cpp</itemPath>
+      <logicalFolder name="cc" displayName="cc" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="cu" displayName="cu" projectFiles="true">
+        <itemPath>src/cu/kernel.cu</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -26,6 +42,10 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>recources</Elem>
+    <Elem>src</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="CUDA-Toolkit" type="1">
@@ -64,7 +84,19 @@
         <packFileList>
         </packFileList>
       </packaging>
-      <item path="src/cc/main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/Test2.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/mapsy.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/mapsy3.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/cu/kernel.cu" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="CUDA-SDK" type="1">
@@ -111,7 +143,19 @@
         <packFileList>
         </packFileList>
       </packaging>
-      <item path="src/cc/main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/Test2.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/mapsy.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/mapsy3.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/cu/kernel.cu" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>
