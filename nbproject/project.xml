@@ -5,14 +5,15 @@
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
             <name>GPUPhysics-v2</name>
             <make-project-type>0</make-project-type>
-            <c-extensions/>
-            <cpp-extensions>cu</cpp-extensions>
+            <c-extensions>c,cu</c-extensions>
+            <cpp-extensions/>
             <header-extensions/>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>recources</sourceRootElem>
                 <sourceRootElem>src</sourceRootElem>
+                <sourceRootElem>include</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

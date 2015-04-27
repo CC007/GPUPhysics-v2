@@ -20,7 +20,7 @@ typedef struct Map {
     int *phi;
 } Map;
 
-typedef struct Coefs {
+typedef struct Data {
     int length;
     double *x;
     double *dx;
@@ -28,9 +28,9 @@ typedef struct Coefs {
     double *dy;
     double *delta;
     double *phi;
-} Coefs;
+} Data;
 
-typedef struct Vars {
+typedef struct Properties {
     double mass;
     double momentum;
     double kinEn;
@@ -39,7 +39,7 @@ typedef struct Vars {
     double mAnomalyG;
     double spinTuneGgamma;
     double lRefOrbit;
-} Vars;
+} Properties;
 
 void scanFile(FILE* fp, int *size) {
     char* line = (char*) malloc(200 * sizeof (char));
@@ -81,10 +81,10 @@ void freeMap(Map *m) {
     }
 }
 
-void mallocCoefs(Coefs **c, int iter, int p) {
+void mallocData(Data **c, int iter, int p) {
     if (iter > 0) {
         int i;
-        (*c) = (Coefs*) malloc(p * sizeof (Coefs));
+        (*c) = (Data*) malloc(p * sizeof (Data));
         for (i = 0; i < p; i++) {
             (*c)[i].length = iter;
             (*c)[i].x = (double*) calloc(iter, sizeof (double));
@@ -97,7 +97,7 @@ void mallocCoefs(Coefs **c, int iter, int p) {
     }
 }
 
-void freeCoefs(Coefs **c, int p) {
+void freeData(Data **c, int p) {
     if ((*c)[0].length > 0) {
         int i;
         for (i = 0; i < p; i++) {
@@ -146,20 +146,20 @@ void cudaFreeMap(Map **m) {
     cudaFree(*m);
 }
 
-void cudaMallocCoefs(Coefs **c, int iter, int p) {
+void cudaMallocData(Data **c, int iter, int p) {
     if (iter > 0) {
         int i;
-        cudaMalloc((void**) c, p * sizeof (Coefs));
+        cudaMalloc((void**) c, p * sizeof (Data));
         for (i = 0; i < p; i++) {
-            Coefs h_c;
-            h_c.length = iter;
-            cudaMalloc((void**) &(h_c.x), iter * sizeof (double));
-            cudaMalloc((void**) &(h_c.dx), iter * sizeof (double));
-            cudaMalloc((void**) &(h_c.y), iter * sizeof (double));
-            cudaMalloc((void**) &(h_c.dy), iter * sizeof (double));
-            cudaMalloc((void**) &(h_c.delta), iter * sizeof (double));
-            cudaMalloc((void**) &(h_c.phi), iter * sizeof (double));
-            cudaMemcpy(&((*c)[i]), &h_c, sizeof (Coefs), cudaMemcpyHostToDevice);
+            Data helper_d;
+            helper_d.length = iter;
+            cudaMalloc((void**) &(helper_d.x), iter * sizeof (double));
+            cudaMalloc((void**) &(helper_d.dx), iter * sizeof (double));
+            cudaMalloc((void**) &(helper_d.y), iter * sizeof (double));
+            cudaMalloc((void**) &(helper_d.dy), iter * sizeof (double));
+            cudaMalloc((void**) &(helper_d.delta), iter * sizeof (double));
+            cudaMalloc((void**) &(helper_d.phi), iter * sizeof (double));
+            cudaMemcpy(&((*c)[i]), &helper_d, sizeof (Data), cudaMemcpyHostToDevice);
         }
     }
 }
@@ -192,36 +192,36 @@ void cudaMemcpyMap(Map *dst_m, Map *src_m, cudaMemcpyKind kind) {
 
 }
 
-void cudaMemcpyCoefs(Coefs *dst_c, Coefs *src_c, cudaMemcpyKind kind) {
-    Coefs helper_c;
+void cudaMemcpyData(Data *dst_c, Data *src_c, cudaMemcpyKind kind) {
+    Data helper_d;
     if (kind == cudaMemcpyDeviceToHost) {
-        cudaMemcpy(&helper_c, src_c, sizeof (Coefs), cudaMemcpyDeviceToHost);
-        cudaMemcpy(dst_c->x, helper_c.x, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->dx, helper_c.dx, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->y, helper_c.y, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->dy, helper_c.dy, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->delta, helper_c.delta, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->phi, helper_c.phi, helper_c.length * sizeof (double), kind);
+        cudaMemcpy(&helper_d, src_c, sizeof (Data), cudaMemcpyDeviceToHost);
+        cudaMemcpy(dst_c->x, helper_d.x, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(dst_c->dx, helper_d.dx, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(dst_c->y, helper_d.y, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(dst_c->dy, helper_d.dy, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(dst_c->delta, helper_d.delta, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(dst_c->phi, helper_d.phi, helper_d.length * sizeof (double), kind);
     } else if (kind == cudaMemcpyHostToDevice) {
-        cudaMemcpy(&helper_c, dst_c, sizeof (Coefs), cudaMemcpyDeviceToHost);
-        cudaMemcpy(helper_c.x, src_c->x, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(helper_c.dx, src_c->dx, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(helper_c.y, src_c->y, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(helper_c.dy, src_c->dy, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(helper_c.delta, src_c->delta, helper_c.length * sizeof (double), kind);
-        cudaMemcpy(helper_c.phi, src_c->phi, helper_c.length * sizeof (double), kind);
+        cudaMemcpy(&helper_d, dst_c, sizeof (Data), cudaMemcpyDeviceToHost);
+        cudaMemcpy(helper_d.x, src_c->x, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(helper_d.dx, src_c->dx, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(helper_d.y, src_c->y, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(helper_d.dy, src_c->dy, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(helper_d.delta, src_c->delta, helper_d.length * sizeof (double), kind);
+        cudaMemcpy(helper_d.phi, src_c->phi, helper_d.length * sizeof (double), kind);
     } else {
-        fprintf(stderr, "DeviceToDevice is not yet supported for coefs!\n");
+        fprintf(stderr, "DeviceToDevice is not yet supported for data!\n");
         getchar();
         exit(EXIT_FAILURE);
     }
 
 }
 
-void cudaMemcpyFirstCoefs(Coefs *dst_c, Coefs *src_c, int p) {
-    Coefs helper_c;
+void cudaMemcpyFirstData(Data *dst_c, Data *src_c, int p) {
+    Data helper_c;
     for (int i = 0; i < p; i++) {
-        cudaMemcpy(&helper_c, &(dst_c[i]), sizeof (Coefs), cudaMemcpyDeviceToHost);
+        cudaMemcpy(&helper_c, &(dst_c[i]), sizeof (Data), cudaMemcpyDeviceToHost);
         cudaMemcpy(helper_c.x, src_c[i].x, sizeof (double), cudaMemcpyHostToDevice);
         cudaMemcpy(helper_c.dx, src_c[i].dx, sizeof (double), cudaMemcpyHostToDevice);
         cudaMemcpy(helper_c.y, src_c[i].y, sizeof (double), cudaMemcpyHostToDevice);
@@ -231,18 +231,18 @@ void cudaMemcpyFirstCoefs(Coefs *dst_c, Coefs *src_c, int p) {
     }
 }
 
-void cudaFreeCoefs(Coefs **c, int p) {
-    Coefs h_coefs;
+void cudaFreeData(Data **c, int p) {
+    Data helper_d;
     int i;
     for (i = 0; i < p; i++) {
-        cudaMemcpy(&h_coefs, &((*c)[i]), sizeof (Coefs), cudaMemcpyDeviceToHost);
-        if (h_coefs.length > 0) {
-            cudaFree(h_coefs.x);
-            cudaFree(h_coefs.dx);
-            cudaFree(h_coefs.y);
-            cudaFree(h_coefs.dy);
-            cudaFree(h_coefs.delta);
-            cudaFree(h_coefs.phi);
+        cudaMemcpy(&helper_d, &((*c)[i]), sizeof (Data), cudaMemcpyDeviceToHost);
+        if (helper_d.length > 0) {
+            cudaFree(helper_d.x);
+            cudaFree(helper_d.dx);
+            cudaFree(helper_d.y);
+            cudaFree(helper_d.dy);
+            cudaFree(helper_d.delta);
+            cudaFree(helper_d.phi);
         }
     }
     cudaFree(*c);
@@ -282,7 +282,7 @@ void readMap(FILE *fp, Map *m, int nr) {
     free(line);
 }
 
-void readVars(FILE *fp, Vars *v) {
+void readProperties(FILE *fp, Properties *v) {
     char* line = (char*) malloc(200 * sizeof (char));
     line = fgets(line, 200, fp);
     fprintf(stderr, "check and store muon mass\n");
@@ -362,7 +362,7 @@ __device__ double cudaSumArray(double *nums, int length) {
     return nums[0];
 }
 
-void scanCoefs(char *fileName, int *count) {
+void scanInputData(char *fileName, int *count) {
     char* line = (char*) malloc(200 * sizeof (char));
     FILE *fp = fopen(fileName, "r");
     if (fp == NULL) {
@@ -383,7 +383,7 @@ void scanCoefs(char *fileName, int *count) {
     free(line);
 }
 
-void getCoefs(Coefs *c) {
+void getInputData(Data *c) {
     fprintf(stderr, "Begin values of the 6 dimentions: ");
 
     scanf("%lf %lf %lf %lf %lf %lf",
@@ -396,7 +396,7 @@ void getCoefs(Coefs *c) {
             );
 }
 
-void readCoefs(Coefs **c, char *fileName, int count) {
+void readInputData(Data **c, char *fileName, int count) {
     FILE *fp = fopen(fileName, "r");
     if (fp == NULL) {
         fprintf(stderr, "Error while opening the coefficients file: %s\n", fileName);
@@ -417,7 +417,7 @@ void readCoefs(Coefs **c, char *fileName, int count) {
     fclose(fp);
 }
 
-void calcCoefs(Coefs *c, int idx, Map *m, double *newValue) {
+void calcData(Data *c, int idx, Map *m, double *newValue) {
     double *nums = (double*) calloc((*m).length, sizeof (double));
 
     for (int i = 0; i < (*m).length; i++) {
@@ -433,7 +433,7 @@ void calcCoefs(Coefs *c, int idx, Map *m, double *newValue) {
     free(nums);
 }
 
-__device__ void cudaCalcCoefs(Coefs *c, int idx, Map *m, double *newValue) {
+__device__ void cudaCalcData(Data *c, int idx, Map *m, double *newValue) {
     double *nums = (double*) malloc((*m).length * sizeof (double));
     memset(nums, 0, (*m).length * sizeof (double));
     for (int i = 0; i < (*m).length; i++) {
@@ -449,48 +449,48 @@ __device__ void cudaCalcCoefs(Coefs *c, int idx, Map *m, double *newValue) {
     free(nums);
 }
 
-void kernel(Coefs *c, Map *x, Map *dx, Map *y, Map *dy, Map *delta, Map *phi, int particleCount, int iter) {
+void kernel(Data *c, Map *x, Map *dx, Map *y, Map *dy, Map *delta, Map *phi, int particleCount, int iter) {
     for (int n = 0; n < particleCount; n++) {
         for (int i = 0; i < iter - 1; i++) {
-            calcCoefs(&(c[n]), i, x, &(c[n].x[i + 1]));
-            calcCoefs(&(c[n]), i, dx, &(c[n].dx[i + 1]));
-            calcCoefs(&(c[n]), i, y, &(c[n].y[i + 1]));
-            calcCoefs(&(c[n]), i, dy, &(c[n].dy[i + 1]));
-            calcCoefs(&(c[n]), i, delta, &(c[n].delta[i + 1]));
-            calcCoefs(&(c[n]), i, phi, &(c[n].phi[i + 1]));
+            calcData(&(c[n]), i, x, &(c[n].x[i + 1]));
+            calcData(&(c[n]), i, dx, &(c[n].dx[i + 1]));
+            calcData(&(c[n]), i, y, &(c[n].y[i + 1]));
+            calcData(&(c[n]), i, dy, &(c[n].dy[i + 1]));
+            calcData(&(c[n]), i, delta, &(c[n].delta[i + 1]));
+            calcData(&(c[n]), i, phi, &(c[n].phi[i + 1]));
         }
     }
 }
 
-__global__ void cudaKernel(Coefs *c, Map *x, Map *dx, Map *y, Map *dy, Map *delta, Map *phi, int particleCount, int iter) {
+__global__ void cudaKernel(Data *c, Map *x, Map *dx, Map *y, Map *dy, Map *delta, Map *phi, int particleCount, int iter) {
     int sizeX = gridDim.x;
     int idx = blockIdx.x;
     int sizeY = blockDim.x;
     int idy = threadIdx.x;
     for (int n = idx * sizeY + idy; n < particleCount; n += sizeX * sizeY) {
         for (int i = 0; i < iter - 1; i++) {
-            cudaCalcCoefs(&(c[n]), i, x, &(c[n].x[i + 1]));
-            cudaCalcCoefs(&(c[n]), i, dx, &(c[n].dx[i + 1]));
-            cudaCalcCoefs(&(c[n]), i, y, &(c[n].y[i + 1]));
-            cudaCalcCoefs(&(c[n]), i, dy, &(c[n].dy[i + 1]));
-            cudaCalcCoefs(&(c[n]), i, delta, &(c[n].delta[i + 1]));
-            cudaCalcCoefs(&(c[n]), i, phi, &(c[n].phi[i + 1]));
+            cudaCalcData(&(c[n]), i, x, &(c[n].x[i + 1]));
+            cudaCalcData(&(c[n]), i, dx, &(c[n].dx[i + 1]));
+            cudaCalcData(&(c[n]), i, y, &(c[n].y[i + 1]));
+            cudaCalcData(&(c[n]), i, dy, &(c[n].dy[i + 1]));
+            cudaCalcData(&(c[n]), i, delta, &(c[n].delta[i + 1]));
+            cudaCalcData(&(c[n]), i, phi, &(c[n].phi[i + 1]));
         }
     }
 }
 
 int main(int argc, char **argv) {
     char fileName[200] = "";
-    char coefsFileName[200] = "";
+    char inputFileName[200] = "";
     char *outputFileName = (char*) malloc(200 * sizeof (char));
     outputFileName[0] = '\0';
     int separateFiles = 0, accelerate = 0;
     int xSize, dxSize, ySize, dySize, deltaSize, phiSize, argcCounter, particleCount = 1, iter = ITER;
     Map x, dx, y, dy, delta, phi;
     Map *dev_x, *dev_dx, *dev_y, *dev_dy, *dev_delta, *dev_phi;
-    Coefs *c;
-    Coefs *dev_c;
-    Vars v;
+    Data *c;
+    Data *dev_c;
+    Properties v;
 
     float h2dTime = 0, kTime = 0, d2hTime;
     cudaEvent_t start, stopH2D, stopK, stopD2H;
@@ -510,7 +510,7 @@ int main(int argc, char **argv) {
                     break;
 
                 case 'c':
-                    sprintf(coefsFileName, "%s", &argv[1][3]);
+                    sprintf(inputFileName, "%s", &argv[1][3]);
                     break;
 
                 case 'o':
@@ -638,8 +638,8 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Error while opening the map file: %s\n", fileName);
         exit(EXIT_FAILURE);
     }
-    fprintf(stderr, "read vars\n");
-    readVars(mapFileP, &v);
+    fprintf(stderr, "read properties\n");
+    readProperties(mapFileP, &v);
     fprintf(stderr, "read x\n");
     readMap(mapFileP, &x, 0);
     fprintf(stderr, "read dx\n");
@@ -658,19 +658,19 @@ int main(int argc, char **argv) {
     // allocate mempry for the coefficients
 
     // read the coefficients from user input
-    if (strncmp(coefsFileName, "\0", 1) == 0) {
-        fprintf(stderr, "map coefs\n");
-        mallocCoefs(&c, iter, particleCount);
-        cudaMallocCoefs(&dev_c, iter, particleCount);
-        fprintf(stderr, "read coefs\n");
-        getCoefs(c);
+    if (strncmp(inputFileName, "\0", 1) == 0) {
+        fprintf(stderr, "malloc data\n");
+        mallocData(&c, iter, particleCount);
+        cudaMallocData(&dev_c, iter, particleCount);
+        fprintf(stderr, "read input\n");
+        getInputData(c);
     } else {
-        scanCoefs(coefsFileName, &particleCount);
-        fprintf(stderr, "map coefs\n");
-        mallocCoefs(&c, iter, particleCount);
-        cudaMallocCoefs(&dev_c, iter, particleCount);
-        fprintf(stderr, "read coefs\n");
-        readCoefs(&c, coefsFileName, particleCount);
+        scanInputData(inputFileName, &particleCount);
+        fprintf(stderr, "malloc data\n");
+        mallocData(&c, iter, particleCount);
+        cudaMallocData(&dev_c, iter, particleCount);
+        fprintf(stderr, "read input\n");
+        readInputData(&c, inputFileName, particleCount);
         fprintf(stderr, "Particle count: %d\n", particleCount);
     }
 
@@ -693,7 +693,7 @@ int main(int argc, char **argv) {
         cudaMemcpyMap(dev_dy, &dy, cudaMemcpyHostToDevice);
         cudaMemcpyMap(dev_delta, &delta, cudaMemcpyHostToDevice);
         cudaMemcpyMap(dev_phi, &phi, cudaMemcpyHostToDevice);
-        cudaMemcpyFirstCoefs(dev_c, c, particleCount);
+        cudaMemcpyFirstData(dev_c, c, particleCount);
 
         cudaEventRecord(stopH2D);
         
@@ -702,11 +702,11 @@ int main(int argc, char **argv) {
         cudaEventRecord(stopK);
     }
     for (int n = 0; n < particleCount; n++) {
-        // if acceleration is on, copy coefs from device to host
+        // if acceleration is on, copy input from device to host
         if (accelerate) {
-            cudaMemcpyCoefs(&(c[n]), &(dev_c[n]), cudaMemcpyDeviceToHost);
+            cudaMemcpyData(&(c[n]), &(dev_c[n]), cudaMemcpyDeviceToHost);
         }
-        // show or save the coefficients 
+        // show or save
         FILE* outputFile;
         char fullOutputFileName[200] = "";
         if (!strncmp(outputFileName, "\0", 1) == 0) {
@@ -732,7 +732,7 @@ int main(int argc, char **argv) {
             outputFile = stdout;
         }
         if (accelerate) {
-            cudaMemcpyCoefs(&(c[n]), &(dev_c[n]), cudaMemcpyDeviceToHost);
+            cudaMemcpyData(&(c[n]), &(dev_c[n]), cudaMemcpyDeviceToHost);
         }
         for (int i = 0; i < iter; i++) {
             fprintf(outputFile, "%10.7f %10.7f %10.7f %10.7f %10.7f %10.7f\n", c[n].x[i], c[n].dx[i], c[n].y[i], c[n].dy[i], c[n].delta[i], c[n].phi[i]);
@@ -764,12 +764,12 @@ int main(int argc, char **argv) {
     cudaFreeMap(&dev_dy);
     cudaFreeMap(&dev_delta);
     cudaFreeMap(&dev_phi);
-    freeCoefs(&c, particleCount);
-    cudaFreeCoefs(&dev_c, particleCount);
+    freeData(&c, particleCount);
+    cudaFreeData(&dev_c, particleCount);
     free(outputFileName);
     fprintf(stderr, "Output is created. Press Enter to continue...\n");
     getchar();
-    if (strncmp(coefsFileName, "\0", 1) == 0) {
+    if (strncmp(inputFileName, "\0", 1) == 0) {
         getchar();
     }
     return 0;

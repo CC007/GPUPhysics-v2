@@ -35,7 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/src/cc/main.o
+	${OBJECTDIR}/recources/map.o \
+	${OBJECTDIR}/src/cu/oldkernel.o
 
 
 # C Compiler Flags
@@ -62,10 +63,15 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/src/cc/main.o: src/cc/main.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src/cc
+${OBJECTDIR}/recources/map.o: recources/map.c 
+	${MKDIR} -p ${OBJECTDIR}/recources
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/main.o src/cc/main.cpp
+	$(COMPILE.c) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/recources/map.o recources/map.c
+
+${OBJECTDIR}/src/cu/oldkernel.o: src/cu/oldkernel.cu 
+	${MKDIR} -p ${OBJECTDIR}/src/cu
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/oldkernel.o src/cu/oldkernel.cu
 
 # Subprojects
 .build-subprojects:
