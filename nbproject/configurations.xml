@@ -29,6 +29,17 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="src" displayName="src" projectFiles="true">
+        <logicalFolder name="cc" displayName="cc" projectFiles="true">
+          <itemPath>src/cc/data.c</itemPath>
+          <itemPath>src/cc/map.c</itemPath>
+          <itemPath>src/cc/properties.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="cu" displayName="cu" projectFiles="true">
+          <itemPath>src/cu/oldkernel.cu</itemPath>
+          <itemPath>src/cu/physicsSimulation.cu</itemPath>
+        </logicalFolder>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
