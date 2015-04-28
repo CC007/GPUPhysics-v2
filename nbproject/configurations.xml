@@ -5,6 +5,9 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="include" displayName="include" projectFiles="true">
+        <itemPath>include/data.h</itemPath>
+        <itemPath>include/map.h</itemPath>
+        <itemPath>include/properties.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -26,11 +29,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="cc" displayName="cc" projectFiles="true">
-        <itemPath>recources/map.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="cu" displayName="cu" projectFiles="true">
-      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -87,9 +85,13 @@
         <packFileList>
         </packFileList>
       </packaging>
-      <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
+      <item path="include/data.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="recources/map.c" ex="false" tool="0" flavor2="0">
+      <item path="include/map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/properties.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
       </item>
       <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
       </item>
@@ -101,7 +103,15 @@
       </item>
       <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/cu/oldkernel.cu" ex="false" tool="1" flavor2="0">
+      <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
     <conf name="CUDA-SDK" type="1">
@@ -148,9 +158,13 @@
         <packFileList>
         </packFileList>
       </packaging>
-      <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
+      <item path="include/data.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="recources/map.c" ex="false" tool="0" flavor2="0">
+      <item path="include/map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/properties.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
       </item>
       <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
       </item>
@@ -162,7 +176,15 @@
       </item>
       <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/cu/oldkernel.cu" ex="false" tool="1" flavor2="0">
+      <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

@@ -35,8 +35,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/recources/map.o \
-	${OBJECTDIR}/src/cu/oldkernel.o
+	${OBJECTDIR}/src/cc/data.o \
+	${OBJECTDIR}/src/cc/map.o \
+	${OBJECTDIR}/src/cc/properties.o \
+	${OBJECTDIR}/src/cu/oldkernel.o \
+	${OBJECTDIR}/src/cu/physicsSimulation.o
 
 
 # C Compiler Flags
@@ -61,17 +64,32 @@ LDLIBSOPTIONS=-L../../NVIDIA_GPU_Computing_SDK/C/lib -L../../NVIDIA_GPU_Computin
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2 ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/recources/map.o: recources/map.c 
-	${MKDIR} -p ${OBJECTDIR}/recources
+${OBJECTDIR}/src/cc/data.o: src/cc/data.c 
+	${MKDIR} -p ${OBJECTDIR}/src/cc
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/recources/map.o recources/map.c
+	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/data.o src/cc/data.c
+
+${OBJECTDIR}/src/cc/map.o: src/cc/map.c 
+	${MKDIR} -p ${OBJECTDIR}/src/cc
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/map.o src/cc/map.c
+
+${OBJECTDIR}/src/cc/properties.o: src/cc/properties.c 
+	${MKDIR} -p ${OBJECTDIR}/src/cc
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/properties.o src/cc/properties.c
 
 ${OBJECTDIR}/src/cu/oldkernel.o: src/cu/oldkernel.cu 
 	${MKDIR} -p ${OBJECTDIR}/src/cu
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/oldkernel.o src/cu/oldkernel.cu
+	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/oldkernel.o src/cu/oldkernel.cu
+
+${OBJECTDIR}/src/cu/physicsSimulation.o: src/cu/physicsSimulation.cu 
+	${MKDIR} -p ${OBJECTDIR}/src/cu
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/physicsSimulation.o src/cu/physicsSimulation.cu
 
 # Subprojects
 .build-subprojects:

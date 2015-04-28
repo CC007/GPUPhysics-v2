@@ -8,7 +8,7 @@ CCFLAGS=-c -Wall -$(OPT)
 CUFLAGS=-dc -$(OPT)
 
 CCSRC=
-CUSRC=kernel.cu
+CUSRC=oldkernel.cu
 CCSRCDIR=src/cc
 CUSRCDIR=src/cu
 
