@@ -7,14 +7,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/mnt/hgfs/NetBeansProjects/CUDA/GPUPhysics-v2/include/safemem.h</file>
-            <file>file:/mnt/hgfs/NetBeansProjects/CUDA/GPUPhysics-v2/src/cc/safemem.c</file>
-            <file>file:/mnt/hgfs/NetBeansProjects/CUDA/GPUPhysics-v2/include/map.h</file>
-            <file>file:/mnt/hgfs/NetBeansProjects/CUDA/GPUPhysics-v2/src/cc/map.c</file>
-            <file>file:/mnt/hgfs/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/safemem.cu</file>
-            <file>file:/mnt/hgfs/NetBeansProjects/CUDA/GPUPhysics-v2/include/data.h</file>
-            <file>file:/mnt/hgfs/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/map.cu</file>
-            <file>file:/mnt/hgfs/NetBeansProjects/CUDA/GPUPhysics-v2/src/cc/data.c</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/nbproject/configurations.xml</file>
         </group>
     </open-files>
 </project-private>

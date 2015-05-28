@@ -1,227 +1,227 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="95">
-  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="HeaderFiles"
+    <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+        <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="include" displayName="include" projectFiles="true">
-        <itemPath>include/data.h</itemPath>
-        <itemPath>include/map.h</itemPath>
-        <itemPath>include/properties.h</itemPath>
-      </logicalFolder>
-      <itemPath>include/safemem.h</itemPath>
-    </logicalFolder>
-    <logicalFolder name="ResourceFiles"
+            <logicalFolder name="include" displayName="include" projectFiles="true">
+                <itemPath>include/data.h</itemPath>
+                <itemPath>include/map.h</itemPath>
+                <itemPath>include/properties.h</itemPath>
+            </logicalFolder>
+            <itemPath>include/safemem.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
-      <logicalFolder name="input" displayName="input" projectFiles="true">
-        <itemPath>recources/input/test.input</itemPath>
-      </logicalFolder>
-      <logicalFolder name="map" displayName="map" projectFiles="true">
-        <itemPath>recources/map/Test1.dat</itemPath>
-        <itemPath>recources/map/Test2.dat</itemPath>
-        <itemPath>recources/map/mapsy.dat</itemPath>
-        <itemPath>recources/map/mapsy3.dat</itemPath>
-        <itemPath>recources/map/mapsy7.dat</itemPath>
-      </logicalFolder>
-      <logicalFolder name="output" displayName="output" projectFiles="true">
-      </logicalFolder>
-    </logicalFolder>
-    <logicalFolder name="SourceFiles"
+            <logicalFolder name="input" displayName="input" projectFiles="true">
+                <itemPath>recources/input/test.input</itemPath>
+            </logicalFolder>
+            <logicalFolder name="map" displayName="map" projectFiles="true">
+                <itemPath>recources/map/Test1.dat</itemPath>
+                <itemPath>recources/map/Test2.dat</itemPath>
+                <itemPath>recources/map/mapsy.dat</itemPath>
+                <itemPath>recources/map/mapsy3.dat</itemPath>
+                <itemPath>recources/map/mapsy7.dat</itemPath>
+            </logicalFolder>
+            <logicalFolder name="output" displayName="output" projectFiles="true">
+            </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="src" displayName="src" projectFiles="true">
-        <logicalFolder name="cc" displayName="cc" projectFiles="true">
-          <itemPath>src/cc/data.c</itemPath>
-          <itemPath>src/cc/map.c</itemPath>
-          <itemPath>src/cc/properties.c</itemPath>
+            <logicalFolder name="src" displayName="src" projectFiles="true">
+                <logicalFolder name="cc" displayName="cc" projectFiles="true">
+                    <itemPath>src/cc/data.c</itemPath>
+                    <itemPath>src/cc/map.c</itemPath>
+                    <itemPath>src/cc/properties.c</itemPath>
+                    <itemPath>src/cc/safemem.c</itemPath>
+                </logicalFolder>
+                <logicalFolder name="cu" displayName="cu" projectFiles="true">
+                    <itemPath>src/cu/data.cu</itemPath>
+                    <itemPath>src/cu/map.cu</itemPath>
+                    <itemPath>src/cu/oldkernel.cu</itemPath>
+                    <itemPath>src/cu/physicsSimulation.cu</itemPath>
+                    <itemPath>src/cu/safemem.cu</itemPath>
+                </logicalFolder>
+            </logicalFolder>
         </logicalFolder>
-        <logicalFolder name="cu" displayName="cu" projectFiles="true">
-          <itemPath>src/cu/data.cu</itemPath>
-          <itemPath>src/cu/map.cu</itemPath>
-          <itemPath>src/cu/oldkernel.cu</itemPath>
-          <itemPath>src/cu/physicsSimulation.cu</itemPath>
-        </logicalFolder>
-      </logicalFolder>
-      <itemPath>src/cc/safemem.c</itemPath>
-      <itemPath>src/cu/safemem.cu</itemPath>
-    </logicalFolder>
-    <logicalFolder name="TestFiles"
+        <logicalFolder name="TestFiles"
                    displayName="Test Files"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
-    </logicalFolder>
-    <logicalFolder name="ExternalFiles"
+        </logicalFolder>
+        <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>Makefile</itemPath>
+            <itemPath>Makefile</itemPath>
+        </logicalFolder>
     </logicalFolder>
-  </logicalFolder>
-  <sourceRootList>
-    <Elem>recources</Elem>
-    <Elem>src</Elem>
-    <Elem>include</Elem>
-  </sourceRootList>
-  <projectmakefile>Makefile</projectmakefile>
-  <confs>
-    <conf name="CUDA-Toolkit" type="1">
-      <toolsSet>
-        <compilerSet>GNU+CUDA|GNU+CUDA</compilerSet>
-        <dependencyChecking>true</dependencyChecking>
-        <rebuildPropChanged>false</rebuildPropChanged>
-      </toolsSet>
-      <compileType>
-        <cTool>
-          <developmentMode>5</developmentMode>
-          <architecture>2</architecture>
-        </cTool>
-        <ccTool>
-          <developmentMode>5</developmentMode>
-          <architecture>2</architecture>
-        </ccTool>
-        <fortranCompilerTool>
-          <developmentMode>5</developmentMode>
-        </fortranCompilerTool>
-        <asmTool>
-          <developmentMode>5</developmentMode>
-        </asmTool>
-        <linkerTool>
-          <linkerAddLib>
-            <pElem>../../NVIDIA_GPU_Computing_SDK/C/lib</pElem>
-            <pElem>../../NVIDIA_GPU_Computing_SDK/shared/lib</pElem>
-          </linkerAddLib>
-          <linkerLibItems>
-            <linkerLibLibItem>cudart</linkerLibLibItem>
-          </linkerLibItems>
-        </linkerTool>
-      </compileType>
-      <packaging>
-        <packType>Tar</packType>
-        <packFileList>
-        </packFileList>
-      </packaging>
-      <item path="include/data.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/map.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/properties.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/safemem.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/Test2.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/mapsy.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/mapsy3.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cc/safemem.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cu/safemem.cu" ex="false" tool="1" flavor2="0">
-      </item>
-    </conf>
-    <conf name="CUDA-SDK" type="1">
-      <toolsSet>
-        <compilerSet>GNU+CUDA|GNU+CUDA</compilerSet>
-        <dependencyChecking>true</dependencyChecking>
-        <rebuildPropChanged>false</rebuildPropChanged>
-      </toolsSet>
-      <compileType>
-        <cTool>
-          <developmentMode>5</developmentMode>
-          <incDir>
-            <pElem>../../NVIDIA_GPU_Computing_SDK/shared/inc</pElem>
-            <pElem>../../NVIDIA_GPU_Computing_SDK/C/common/inc/</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <developmentMode>5</developmentMode>
-          <incDir>
-            <pElem>../../NVIDIA_GPU_Computing_SDK/shared/inc</pElem>
-            <pElem>../../NVIDIA_GPU_Computing_SDK/C/common/inc/</pElem>
-          </incDir>
-        </ccTool>
-        <fortranCompilerTool>
-          <developmentMode>5</developmentMode>
-        </fortranCompilerTool>
-        <asmTool>
-          <developmentMode>5</developmentMode>
-        </asmTool>
-        <linkerTool>
-          <linkerAddLib>
-            <pElem>../../NVIDIA_GPU_Computing_SDK/C/lib</pElem>
-            <pElem>../../NVIDIA_GPU_Computing_SDK/shared/lib</pElem>
-          </linkerAddLib>
-          <linkerLibItems>
-            <linkerLibLibItem>cudart</linkerLibLibItem>
-            <linkerLibLibItem>cutil_x86_64</linkerLibLibItem>
-          </linkerLibItems>
-        </linkerTool>
-      </compileType>
-      <packaging>
-        <packType>Tar</packType>
-        <packTopDir></packTopDir>
-        <packFileList>
-        </packFileList>
-      </packaging>
-      <item path="include/data.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/map.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/properties.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="include/safemem.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/Test2.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/mapsy.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/mapsy3.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cc/safemem.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/cu/safemem.cu" ex="false" tool="1" flavor2="0">
-      </item>
-    </conf>
-  </confs>
+    <sourceRootList>
+        <Elem>recources</Elem>
+        <Elem>src</Elem>
+        <Elem>include</Elem>
+    </sourceRootList>
+    <projectmakefile>Makefile</projectmakefile>
+    <confs>
+        <conf name="CUDA-Toolkit" type="1">
+            <toolsSet>
+                <compilerSet>GNU+CUDA|GNU+CUDA</compilerSet>
+                <dependencyChecking>true</dependencyChecking>
+                <rebuildPropChanged>false</rebuildPropChanged>
+            </toolsSet>
+            <compileType>
+                <cTool>
+                    <developmentMode>5</developmentMode>
+                    <architecture>2</architecture>
+                </cTool>
+                <ccTool>
+                    <developmentMode>5</developmentMode>
+                    <architecture>2</architecture>
+                </ccTool>
+                <fortranCompilerTool>
+                    <developmentMode>5</developmentMode>
+                </fortranCompilerTool>
+                <asmTool>
+                    <developmentMode>5</developmentMode>
+                </asmTool>
+                <linkerTool>
+                    <linkerAddLib>
+                        <pElem>../../NVIDIA_GPU_Computing_SDK/C/lib</pElem>
+                        <pElem>../../NVIDIA_GPU_Computing_SDK/shared/lib</pElem>
+                    </linkerAddLib>
+                    <linkerLibItems>
+                        <linkerLibLibItem>cudart</linkerLibLibItem>
+                    </linkerLibItems>
+                </linkerTool>
+            </compileType>
+            <packaging>
+                <packType>Tar</packType>
+                <packFileList>
+                </packFileList>
+            </packaging>
+            <item path="include/data.h" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="include/map.h" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="include/properties.h" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="include/safemem.h" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/Test2.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/mapsy.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/mapsy3.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cc/safemem.c" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
+            </item>
+            <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
+            </item>
+            <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cu/safemem.cu" ex="false" tool="1" flavor2="0">
+            </item>
+        </conf>
+        <conf name="CUDA-SDK" type="1">
+            <toolsSet>
+                <compilerSet>GNU+CUDA|GNU+CUDA</compilerSet>
+                <dependencyChecking>true</dependencyChecking>
+                <rebuildPropChanged>false</rebuildPropChanged>
+            </toolsSet>
+            <compileType>
+                <cTool>
+                    <developmentMode>5</developmentMode>
+                    <incDir>
+                        <pElem>../../NVIDIA_GPU_Computing_SDK/shared/inc</pElem>
+                        <pElem>../../NVIDIA_GPU_Computing_SDK/C/common/inc/</pElem>
+                    </incDir>
+                </cTool>
+                <ccTool>
+                    <developmentMode>5</developmentMode>
+                    <incDir>
+                        <pElem>../../NVIDIA_GPU_Computing_SDK/shared/inc</pElem>
+                        <pElem>../../NVIDIA_GPU_Computing_SDK/C/common/inc/</pElem>
+                    </incDir>
+                </ccTool>
+                <fortranCompilerTool>
+                    <developmentMode>5</developmentMode>
+                </fortranCompilerTool>
+                <asmTool>
+                    <developmentMode>5</developmentMode>
+                </asmTool>
+                <linkerTool>
+                    <linkerAddLib>
+                        <pElem>../../NVIDIA_GPU_Computing_SDK/C/lib</pElem>
+                        <pElem>../../NVIDIA_GPU_Computing_SDK/shared/lib</pElem>
+                    </linkerAddLib>
+                    <linkerLibItems>
+                        <linkerLibLibItem>cudart</linkerLibLibItem>
+                        <linkerLibLibItem>cutil_x86_64</linkerLibLibItem>
+                    </linkerLibItems>
+                </linkerTool>
+            </compileType>
+            <packaging>
+                <packType>Tar</packType>
+                <packTopDir></packTopDir>
+                <packFileList>
+                </packFileList>
+            </packaging>
+            <item path="include/data.h" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="include/map.h" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="include/properties.h" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="include/safemem.h" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/Test2.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/mapsy.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/mapsy3.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
+            </item>
+            <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cc/safemem.c" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
+            </item>
+            <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
+            </item>
+            <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
+            </item>
+            <item path="src/cu/safemem.cu" ex="false" tool="1" flavor2="0">
+            </item>
+        </conf>
+    </confs>
 </configurationDescriptor>
