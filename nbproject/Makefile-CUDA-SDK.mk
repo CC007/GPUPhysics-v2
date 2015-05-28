@@ -35,15 +35,15 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/src/cc/allocation.o \
 	${OBJECTDIR}/src/cc/data.o \
 	${OBJECTDIR}/src/cc/map.o \
 	${OBJECTDIR}/src/cc/properties.o \
-	${OBJECTDIR}/src/cu/allocation.o \
+	${OBJECTDIR}/src/cc/safemem.o \
 	${OBJECTDIR}/src/cu/data.o \
 	${OBJECTDIR}/src/cu/map.o \
 	${OBJECTDIR}/src/cu/oldkernel.o \
-	${OBJECTDIR}/src/cu/physicsSimulation.o
+	${OBJECTDIR}/src/cu/physicsSimulation.o \
+	${OBJECTDIR}/src/cu/safemem.o
 
 
 # C Compiler Flags
@@ -70,11 +70,6 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/src/cc/allocation.o: src/cc/allocation.c 
-	${MKDIR} -p ${OBJECTDIR}/src/cc
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/allocation.o src/cc/allocation.c
-
 ${OBJECTDIR}/src/cc/data.o: src/cc/data.c 
 	${MKDIR} -p ${OBJECTDIR}/src/cc
 	${RM} "$@.d"
@@ -90,10 +85,10 @@ ${OBJECTDIR}/src/cc/properties.o: src/cc/properties.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/properties.o src/cc/properties.c
 
-${OBJECTDIR}/src/cu/allocation.o: src/cu/allocation.cu 
-	${MKDIR} -p ${OBJECTDIR}/src/cu
+${OBJECTDIR}/src/cc/safemem.o: src/cc/safemem.c 
+	${MKDIR} -p ${OBJECTDIR}/src/cc
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/allocation.o src/cu/allocation.cu
+	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/safemem.o src/cc/safemem.c
 
 ${OBJECTDIR}/src/cu/data.o: src/cu/data.cu 
 	${MKDIR} -p ${OBJECTDIR}/src/cu
@@ -114,6 +109,11 @@ ${OBJECTDIR}/src/cu/physicsSimulation.o: src/cu/physicsSimulation.cu
 	${MKDIR} -p ${OBJECTDIR}/src/cu
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/physicsSimulation.o src/cu/physicsSimulation.cu
+
+${OBJECTDIR}/src/cu/safemem.o: src/cu/safemem.cu 
+	${MKDIR} -p ${OBJECTDIR}/src/cu
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -I../../NVIDIA_GPU_Computing_SDK/shared/inc -I../../NVIDIA_GPU_Computing_SDK/C/common/inc/ -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/safemem.o src/cu/safemem.cu
 
 # Subprojects
 .build-subprojects:
