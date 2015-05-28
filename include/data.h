@@ -1,12 +1,12 @@
 /* 
- * File:   input.h
- * Author: rik
+ * File:   data.h
+ * Author: Rik Schaaf aka CC007 <coolcat007.nl>
  *
  * Created on April 27, 2015, 7:54 PM
  */
 
-#ifndef INPUT_H
-#define	INPUT_H
+#ifndef DATA_H
+#define	DATA_H
 
 #ifdef	__cplusplus
 extern "C" {
@@ -30,5 +30,5 @@ typedef struct Data {
 }
 #endif
 
-#endif	/* INPUT_H */
+#endif	/* DATA_H */
 

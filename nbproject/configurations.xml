@@ -9,6 +9,7 @@
         <itemPath>include/map.h</itemPath>
         <itemPath>include/properties.h</itemPath>
       </logicalFolder>
+      <itemPath>include/allocation.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -36,10 +37,14 @@
           <itemPath>src/cc/properties.c</itemPath>
         </logicalFolder>
         <logicalFolder name="cu" displayName="cu" projectFiles="true">
+          <itemPath>src/cu/data.cu</itemPath>
+          <itemPath>src/cu/map.cu</itemPath>
           <itemPath>src/cu/oldkernel.cu</itemPath>
           <itemPath>src/cu/physicsSimulation.cu</itemPath>
         </logicalFolder>
       </logicalFolder>
+      <itemPath>src/cc/allocation.c</itemPath>
+      <itemPath>src/cu/allocation.cu</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -96,6 +101,8 @@
         <packFileList>
         </packFileList>
       </packaging>
+      <item path="include/allocation.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/data.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/map.h" ex="false" tool="3" flavor2="0">
@@ -114,11 +121,19 @@
       </item>
       <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/cc/allocation.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cu/allocation.cu" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
       </item>
@@ -169,6 +184,8 @@
         <packFileList>
         </packFileList>
       </packaging>
+      <item path="include/allocation.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/data.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/map.h" ex="false" tool="3" flavor2="0">
@@ -187,11 +204,19 @@
       </item>
       <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/cc/allocation.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cu/allocation.cu" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
       </item>

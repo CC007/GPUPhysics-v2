@@ -1,28 +1,68 @@
-#include "map.h"
+/* 
+ * File:   map.c
+ * Author: Rik Schaaf aka CC007 <coolcat007.nl>
+ *
+ * Created on April 27, 2015, 7:33 PM
+ */
 
-void mallocMap(Map m, int p) {
-    m = malloc(sizeof (struct _Map));
-    m->length = p;
-    if (p > 0) {
-        m->A = calloc(p, sizeof (double));
-        m->x = calloc(p, sizeof (int));
-        m->dx = calloc(p, sizeof (int));
-        m->y = calloc(p, sizeof (int));
-        m->dy = calloc(p, sizeof (int));
-        m->delta = calloc(p, sizeof (int));
-        m->phi = calloc(p, sizeof (int));
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "../../include/map.h"
+#include "../../include/safemem.h"
+
+/* Allocate memory for a map with rowCount rows
+ *  
+ *  \param mapPointer - a pointer to the map that needs to be allocated
+ *  \param rowCount - the number of rows that the map consists of
+ */
+void mallocMap(Map *mapPointer, int rowCount) {
+    Map helperMap;
+    if (safeMalloc((void**) &helperMap, 1, sizeof (struct _Map))) {
+        fprintf(stderr, "The map could not be allocated");
+        exit(EXIT_FAILURE);
     }
+    helperMap->length = rowCount;
+    if (rowCount > 0) {
+        int mallocFailed = 0;
+        mallocFailed += safeCalloc((void**) &(helperMap->A), rowCount, sizeof (double));
+        mallocFailed += safeCalloc((void**) &(helperMap->x), rowCount, sizeof (int));
+        mallocFailed += safeCalloc((void**) &(helperMap->dx), rowCount, sizeof (int));
+        mallocFailed += safeCalloc((void**) &(helperMap->y), rowCount, sizeof (int));
+        mallocFailed += safeCalloc((void**) &(helperMap->dy), rowCount, sizeof (int));
+        mallocFailed += safeCalloc((void**) &(helperMap->delta), rowCount, sizeof (int));
+        mallocFailed += safeCalloc((void**) &(helperMap->phi), rowCount, sizeof (int));
+        if (mallocFailed) {
+            fprintf(stderr, "The map's contents could not be allocated");
+            exit(EXIT_FAILURE);
+        }
+    }
+    *mapPointer = helperMap;
 }
 
-void freeMap(Map m) {
-    if (m->length > 0) {
-        free(m->A);
-        free(m->x);
-        free(m->dx);
-        free(m->y);
-        free(m->dy);
-        free(m->delta);
-        free(m->phi);
+/* Free the memory of the provided map 
+ *  
+ *  \param mapPointer - a pointer to the map that needs to be freed
+ */
+void freeMap(Map *mapPointer) {
+    Map helperMap = *mapPointer;
+    int freeFailed = 0;
+    if (helperMap->length > 0) {
+        freeFailed += safeFree((void**) &(helperMap->A));
+        freeFailed += safeFree((void**) &(helperMap->x));
+        freeFailed += safeFree((void**) &(helperMap->dx));
+        freeFailed += safeFree((void**) &(helperMap->y));
+        freeFailed += safeFree((void**) &(helperMap->dy));
+        freeFailed += safeFree((void**) &(helperMap->delta));
+        freeFailed += safeFree((void**) &(helperMap->phi));
     }
-    free(m);
+    if (freeFailed) {
+        fprintf(stderr, "The map's contents could not be freed");
+        exit(EXIT_FAILURE);
+    }
+    freeFailed += safeFree((void**) mapPointer);
+    if (freeFailed) {
+        fprintf(stderr, "The map could not be freed");
+        exit(EXIT_FAILURE);
+    }
 }

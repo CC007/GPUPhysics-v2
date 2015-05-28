@@ -1,4 +1,12 @@
-#include "data.h"
+/* 
+ * File:   data.c
+ * Author: Rik Schaaf aka CC007 <coolcat007.nl>
+ *
+ * Created on April 27, 2015, 7:54 PM
+ */
+
+#include "../../include/data.h"
+#include "../../include/safemem.h"
 
 void mallocData(Data *c, int iter, int p) {
     if (iter > 0) {

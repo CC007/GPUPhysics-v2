@@ -1,6 +1,6 @@
 /* 
  * File:   physicsSimulation.cu
- * Author: rik
+ * Author: Rik Schaaf aka CC007 <coolcat007.nl>
  *
  * Created on April 27, 2015, 8:34 PM
  */

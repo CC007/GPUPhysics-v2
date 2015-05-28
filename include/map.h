@@ -1,6 +1,6 @@
 /* 
  * File:   map.h
- * Author: rik
+ * Author: Rik Schaaf aka CC007 <coolcat007.nl>
  *
  * Created on April 27, 2015, 7:33 PM
  */
@@ -23,8 +23,8 @@ extern "C" {
         int *phi;
     } *Map;
 
-    void mallocMap(Map m, int p);
-    void freeMap(Map m);
+    void mallocMap(Map *mapPointer, int rowCount);
+    void freeMap(Map *mapPointer);
     
 #ifdef	__cplusplus
 }

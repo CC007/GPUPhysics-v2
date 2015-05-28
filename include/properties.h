@@ -1,12 +1,12 @@
 /* 
- * File:   params.h
- * Author: rik
+ * File:   properties.h
+ * Author: Rik Schaaf aka CC007 <coolcat007.nl>
  *
  * Created on April 27, 2015, 7:56 PM
  */
 
-#ifndef PARAMS_H
-#define	PARAMS_H
+#ifndef PROPERTIES_H
+#define	PROPERTIES_H
 
 #ifdef	__cplusplus
 extern "C" {
@@ -27,5 +27,5 @@ extern "C" {
 }
 #endif
 
-#endif	/* PARAMS_H */
+#endif	/* PROPERTIES_H */
 
