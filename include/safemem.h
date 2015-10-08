@@ -34,7 +34,7 @@ extern "C" {
      *  ALLOC_SUCCESS - the memory is successfully allocated
      *    ALLOC_FAILURE - the memory allocation was unsuccessful
      */
-    int safeMalloc(void **pp, int elemCount, int elemSize);
+    int safeMalloc(void **returnPointer, int elementCount, int elementSize);
 
     /* Allocate elemCount * elemSize bytes of memory, all elements initialized to 0
      * The program will check if the memory was successfully allocated

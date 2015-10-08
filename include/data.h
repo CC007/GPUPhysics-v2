@@ -12,19 +12,18 @@
 extern "C" {
 #endif
 
-typedef struct Data {
-    int length;
-    double *x;
-    double *dx;
-    double *y;
-    double *dy;
-    double *delta;
-    double *phi;
-} *Data;
+	typedef struct _DataArray {
+		int length;
+		double *x;
+		double *dx;
+		double *y;
+		double *dy;
+		double *delta;
+		double *phi;
+	} *DataArray;
 
-
-
-
+	void mallocData(DataArray *dataArray, int iterationCount, int particleCount);
+	void freeData(DataArray *dataArray, int particleCount);
 
 #ifdef	__cplusplus
 }

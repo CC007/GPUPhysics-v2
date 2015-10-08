@@ -25,6 +25,8 @@ extern "C" {
 
     void mallocMap(Map *mapPointer, int rowCount);
     void freeMap(Map *mapPointer);
+    void cudaMallocMap(Map *mapPointer, int rowCount);
+    void cudaFreeMap(Map *mapPointer);
     
 #ifdef	__cplusplus
 }

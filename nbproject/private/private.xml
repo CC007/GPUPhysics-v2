@@ -7,7 +7,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/nbproject/configurations.xml</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/data.cu</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/physicsSimulation.cu</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cc/data.c</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/map.h</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/properties.h</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/oldkernel.cu</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/data.h</file>
         </group>
     </open-files>
 </project-private>

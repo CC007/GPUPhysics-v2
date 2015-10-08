@@ -1,40 +1,57 @@
 /* 
  * File:   data.c
- * Author: Rik Schaaf aka CC007 <coolcat007.nl>
+ * Author: Rik Schaaf aka CC007 (coolcat007.nl)
  *
  * Created on April 27, 2015, 7:54 PM
  */
 
+#include <stdlib.h>
+#include <stdio.h>
 #include "../../include/data.h"
 #include "../../include/safemem.h"
 
-void mallocData(Data *c, int iter, int p) {
-    if (iter > 0) {
-        int i;
-        c = malloc(p * sizeof (Data));
-        for (i = 0; i < p; i++) {
-            c[i]->length = iter;
-            c[i]->x = calloc(iter, sizeof (double));
-            c[i]->dx = calloc(iter, sizeof (double));
-            c[i]->y = calloc(iter, sizeof (double));
-            c[i]->dy = calloc(iter, sizeof (double));
-            c[i]->delta = calloc(iter, sizeof (double));
-            c[i]->phi = calloc(iter, sizeof (double));
-        }
-    }
+void mallocData(DataArray *dataArray, int iterationCount, int particleCount) {
+	DataArray helperDataArray;
+	if (safeMalloc((void**) &helperDataArray, particleCount, sizeof (struct _DataArray))) {
+		eprintf("The data array could not be allocated");
+	}
+	for (int i = 0; i < particleCount; i++) {
+		helperDataArray[i].length = iterationCount;
+	}
+	if (iterationCount > 0) {
+		int mallocFailed = 0;
+		for (int i = 0; i < particleCount; i++) {
+			mallocFailed += safeCalloc((void**) &(helperDataArray[i].x), iterationCount, sizeof (double));
+			mallocFailed += safeCalloc((void**) &(helperDataArray[i].dx), iterationCount, sizeof (double));
+			mallocFailed += safeCalloc((void**) &(helperDataArray[i].y), iterationCount, sizeof (double));
+			mallocFailed += safeCalloc((void**) &(helperDataArray[i].dy), iterationCount, sizeof (double));
+			mallocFailed += safeCalloc((void**) &(helperDataArray[i].delta), iterationCount, sizeof (double));
+			mallocFailed += safeCalloc((void**) &(helperDataArray[i].phi), iterationCount, sizeof (double));
+		}
+		if (mallocFailed) {
+			eprintf("The data array's contents could not be allocated");
+		}
+	}
+	*dataArray = helperDataArray;
 }
 
-void freeData(Data *c, int p) {
-    if (c[0]->length > 0) {
-        int i;
-        for (i = 0; i < p; i++) {
-            free(c[i]->x);
-            free(c[i]->dx);
-            free(c[i]->y);
-            free(c[i]->dy);
-            free(c[i]->delta);
-            free(c[i]->phi);
-        }
-        free(c);
-    }
+void freeData(DataArray *dataArray, int particleCount) {
+	DataArray helperDataArray = *dataArray;
+	int freeFailed = 0;
+	if (helperDataArray->length > 0) {
+		for (int i = 0; i < particleCount; i++) {
+			freeFailed += safeFree((void**) &(helperDataArray[i].x));
+			freeFailed += safeFree((void**) &(helperDataArray[i].dx));
+			freeFailed += safeFree((void**) &(helperDataArray[i].y));
+			freeFailed += safeFree((void**) &(helperDataArray[i].dy));
+			freeFailed += safeFree((void**) &(helperDataArray[i].delta));
+			freeFailed += safeFree((void**) &(helperDataArray[i].phi));
+		}
+	}
+	if (freeFailed) {
+		wprintf("The data array's contents could not be freed");
+	}
+	if (safeFree((void**) dataArray)) {
+		wprintf("The data array could not be freed");
+	}
 }
