@@ -13,6 +13,8 @@
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
 
+#include "../../include/kernel.h"
+
 #define ITER 4000
 #define MIN(x, y) (x<y?x:y)
 

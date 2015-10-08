@@ -10,6 +10,7 @@
         <itemPath>include/properties.h</itemPath>
       </logicalFolder>
       <itemPath>include/extendedio.h</itemPath>
+      <itemPath>include/kernel.h</itemPath>
       <itemPath>include/safemem.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -47,6 +48,8 @@
         </logicalFolder>
       </logicalFolder>
       <itemPath>src/cc/extendedio.c</itemPath>
+      <itemPath>src/cc/kernel.c</itemPath>
+      <itemPath>src/cu/newfile.cu</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -107,6 +110,8 @@
       </item>
       <item path="include/extendedio.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/kernel.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/map.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/properties.h" ex="false" tool="3" flavor2="0">
@@ -129,6 +134,8 @@
       </item>
       <item path="src/cc/extendedio.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="src/cc/kernel.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
@@ -138,6 +145,8 @@
       <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/cu/newfile.cu" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
       </item>
@@ -194,6 +203,8 @@
       </item>
       <item path="include/extendedio.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/kernel.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/map.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/properties.h" ex="false" tool="3" flavor2="0">
@@ -216,6 +227,8 @@
       </item>
       <item path="src/cc/extendedio.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="src/cc/kernel.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
@@ -225,6 +238,8 @@
       <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/cu/newfile.cu" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
       </item>

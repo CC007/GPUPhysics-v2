@@ -14,7 +14,7 @@ void eprintf(const char *format, ...) {
 	va_start(args, format);
 	fprintf(stderr, "ERROR: ");
 	vfprintf(stderr, format, args);
-	ca_end(args);
+	va_end(args);
 	exit(EXIT_FAILURE);
 }
 
@@ -23,5 +23,5 @@ void wprintf(const char *format, ...) {
 	va_start(args, format);
 	fprintf(stderr, "WARNING: ");
 	vfprintf(stderr, format, args);
-	ca_end(args);
+	va_end(args);
 }

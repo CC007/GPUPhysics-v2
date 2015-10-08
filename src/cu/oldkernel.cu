@@ -158,54 +158,6 @@ void readProperties(FILE *fp, Properties *v) {
     free(line);
 }
 
-void sumArrayHelper(double *nums, int length, int interval) {
-    int index = 0;
-    int next = interval / 2;
-    do {
-        if (next < length) {
-            nums[index] += nums[next];
-        }
-        index += interval;
-        next += interval;
-    } while (index < length);
-}
-
-double sumArray(double *nums, int length) {
-    if (length <= 0) {
-        return 0;
-    }
-    int interval = 2;
-    while (interval < length * 2) {
-        sumArrayHelper(nums, length, interval);
-        interval *= 2;
-    }
-    return nums[0];
-}
-
-__device__ void cudaSumArrayHelper(double *nums, int length, int interval) {
-    int index = 0;
-    int next = interval / 2;
-    do {
-        if (next < length) {
-            nums[index] += nums[next];
-        }
-        index += interval;
-        next += interval;
-    } while (index < length);
-}
-
-__device__ double cudaSumArray(double *nums, int length) {
-    if (length <= 0) {
-        return 0;
-    }
-    int interval = 2;
-    while (interval < length * 2) {
-        cudaSumArrayHelper(nums, length, interval);
-        interval *= 2;
-    }
-    return nums[0];
-}
-
 void scanInputData(char *fileName, int *count) {
     char* line = (char*) malloc(200 * sizeof (char));
     FILE *fp = fopen(fileName, "r");
