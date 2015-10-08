@@ -6,10 +6,12 @@
  */
 #include <cuda.h>
 #include <cuda_runtime.h>
+
 #include "../../include/data.h"
 #include "../../include/safemem.h"
+#include "../../include/extendedio.h"
 
-void cudaMallocData(DataArray *dataArray, int iterationCount, int particleCount) {
+void cudaMallocDataArray(DataArray *dataArray, int iterationCount, int particleCount) {
 	DataArray hostHelperDataArray;
 	DataArray devHelperDataArray;
 	if (safeMalloc((void**) &hostHelperDataArray, particleCount, sizeof (struct _DataArray))) {
@@ -44,6 +46,39 @@ void cudaMallocData(DataArray *dataArray, int iterationCount, int particleCount)
 	}
 }
 
+void cudaFreeDataArray(DataArray *dataArray, int particleCount) {
+	DataArray devHelperDataArray = *dataArray;
+	DataArray hostHelperDataArray;
+	if (safeMalloc((void**) &hostHelperDataArray, 1, sizeof (struct _DataArray))) {
+		wprintf("The map's contents could not be accessed (temporary host map alloc failed)");
+		return;
+	}
+	if (safeCudaMemcpyDtH(&hostHelperDataArray, &devHelperDataArray, 1, sizeof (struct _DataArray))) {
+		wprintf("The map's contents could not be accessed (temporary host map memcpy failed)");
+		return;
+	}
+	int freeFailed = 0;
+	if (hostHelperDataArray->length > 0) {
+		for (int i = 0; i < particleCount; i++) {
+			freeFailed += safeCudaFree((void**) &(hostHelperDataArray[i].x));
+			freeFailed += safeCudaFree((void**) &(hostHelperDataArray[i].dx));
+			freeFailed += safeCudaFree((void**) &(hostHelperDataArray[i].y));
+			freeFailed += safeCudaFree((void**) &(hostHelperDataArray[i].dy));
+			freeFailed += safeCudaFree((void**) &(hostHelperDataArray[i].delta));
+			freeFailed += safeCudaFree((void**) &(hostHelperDataArray[i].phi));
+		}
+	}
+	if (freeFailed) {
+		wprintf("The map's contents could not be freed");
+	}
+	if (safeFree((void**) &hostHelperDataArray)) {
+		wprintf("The temporary host map's contents could not be freed");
+	}
+	if (safeCudaFree((void**) dataArray)) {
+		wprintf("The map could not be freed");
+	}
+}
+/*
 void cudaMemcpyMap(Map *dst_m, Map *src_m, cudaMemcpyKind kind) {
 	Map helper_m;
 	if (kind == cudaMemcpyDeviceToHost) {
@@ -70,4 +105,4 @@ void cudaMemcpyMap(Map *dst_m, Map *src_m, cudaMemcpyKind kind) {
 		exit(EXIT_FAILURE);
 	}
 
-}
+}*/

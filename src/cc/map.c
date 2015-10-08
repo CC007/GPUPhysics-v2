@@ -10,6 +10,7 @@
 
 #include "../../include/map.h"
 #include "../../include/safemem.h"
+#include "../../include/extendedio.h"
 
 /* Allocate memory for a map with rowCount rows
  *  

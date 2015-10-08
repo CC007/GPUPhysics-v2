@@ -10,6 +10,7 @@
 
 #include "../../include/map.h"
 #include "../../include/safemem.h"
+#include "../../include/extendedio.h"
 
 void cudaMallocMap(Map *mapPointer, int rowCount) {
 	Map hostHelperMap;

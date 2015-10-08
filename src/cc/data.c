@@ -7,10 +7,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "../../include/data.h"
 #include "../../include/safemem.h"
+#include "../../include/extendedio.h"
 
-void mallocData(DataArray *dataArray, int iterationCount, int particleCount) {
+void mallocDataArray(DataArray *dataArray, int iterationCount, int particleCount) {
 	DataArray helperDataArray;
 	if (safeMalloc((void**) &helperDataArray, particleCount, sizeof (struct _DataArray))) {
 		eprintf("The data array could not be allocated");
@@ -35,7 +37,7 @@ void mallocData(DataArray *dataArray, int iterationCount, int particleCount) {
 	*dataArray = helperDataArray;
 }
 
-void freeData(DataArray *dataArray, int particleCount) {
+void freeDataArray(DataArray *dataArray, int particleCount) {
 	DataArray helperDataArray = *dataArray;
 	int freeFailed = 0;
 	if (helperDataArray->length > 0) {

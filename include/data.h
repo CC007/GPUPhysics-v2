@@ -22,8 +22,10 @@ extern "C" {
 		double *phi;
 	} *DataArray;
 
-	void mallocData(DataArray *dataArray, int iterationCount, int particleCount);
-	void freeData(DataArray *dataArray, int particleCount);
+	void mallocDataArray(DataArray *dataArray, int iterationCount, int particleCount);
+	void freeDataArray(DataArray *dataArray, int particleCount);
+	void cudaMallocDataArray(DataArray *dataArray, int iterationCount, int particleCount);
+	void cudaFreeDataArray(DataArray *dataArray, int particleCount);
 
 #ifdef	__cplusplus
 }

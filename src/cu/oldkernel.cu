@@ -9,38 +9,6 @@
 #define ITER 4000
 #define MIN(x, y) (x<y?x:y)
 
-typedef struct Map {
-    int length;
-    double *A;
-    int *x;
-    int *dx;
-    int *y;
-    int *dy;
-    int *delta;
-    int *phi;
-} Map;
-
-typedef struct Data {
-    int length;
-    double *x;
-    double *dx;
-    double *y;
-    double *dy;
-    double *delta;
-    double *phi;
-} Data;
-
-typedef struct Properties {
-    double mass;
-    double momentum;
-    double kinEn;
-    double gamma;
-    double beta;
-    double mAnomalyG;
-    double spinTuneGgamma;
-    double lRefOrbit;
-} Properties;
-
 void scanFile(FILE* fp, int *size) {
     char* line = (char*) malloc(200 * sizeof (char));
     line = fgets(line, 200, fp);
@@ -54,114 +22,6 @@ void scanFile(FILE* fp, int *size) {
         for ((*size) = 0; !strstr((line = fgets(line, 200, fp)), "------"); (*size)++);
     }
     free(line);
-}
-
-void mallocMap(Map *m, int p) {
-    (*m).length = p;
-    if (p > 0) {
-        (*m).A = (double*) calloc(p, sizeof (double));
-        (*m).x = (int*) calloc(p, sizeof (int));
-        (*m).dx = (int*) calloc(p, sizeof (int));
-        (*m).y = (int*) calloc(p, sizeof (int));
-        (*m).dy = (int*) calloc(p, sizeof (int));
-        (*m).delta = (int*) calloc(p, sizeof (int));
-        (*m).phi = (int*) calloc(p, sizeof (int));
-    }
-}
-
-void freeMap(Map *m) {
-    if ((*m).length > 0) {
-        free((*m).A);
-        free((*m).x);
-        free((*m).dx);
-        free((*m).y);
-        free((*m).dy);
-        free((*m).delta);
-        free((*m).phi);
-    }
-}
-
-void mallocData(Data **c, int iter, int p) {
-    if (iter > 0) {
-        int i;
-        (*c) = (Data*) malloc(p * sizeof (Data));
-        for (i = 0; i < p; i++) {
-            (*c)[i].length = iter;
-            (*c)[i].x = (double*) calloc(iter, sizeof (double));
-            (*c)[i].dx = (double*) calloc(iter, sizeof (double));
-            (*c)[i].y = (double*) calloc(iter, sizeof (double));
-            (*c)[i].dy = (double*) calloc(iter, sizeof (double));
-            (*c)[i].delta = (double*) calloc(iter, sizeof (double));
-            (*c)[i].phi = (double*) calloc(iter, sizeof (double));
-        }
-    }
-}
-
-void freeData(Data **c, int p) {
-    if ((*c)[0].length > 0) {
-        int i;
-        for (i = 0; i < p; i++) {
-            free((*c)[i].x);
-            free((*c)[i].dx);
-            free((*c)[i].y);
-            free((*c)[i].dy);
-            free((*c)[i].delta);
-            free((*c)[i].phi);
-        }
-        free(*c);
-    }
-}
-
-void cudaMallocMap(Map **m, int p) {
-    cudaMalloc((void**) m, sizeof (Map));
-    Map h_m;
-    h_m.length = p;
-    if (p > 0) {
-        cudaMalloc((void**) &(h_m.A), p * sizeof (double));
-        cudaMalloc((void**) &(h_m.x), p * sizeof (int));
-        cudaMalloc((void**) &(h_m.dx), p * sizeof (int));
-        cudaMalloc((void**) &(h_m.y), p * sizeof (int));
-        cudaMalloc((void**) &(h_m.dy), p * sizeof (int));
-        cudaMalloc((void**) &(h_m.delta), p * sizeof (int));
-        cudaMalloc((void**) &(h_m.phi), p * sizeof (int));
-
-
-        cudaMemcpy(*m, &h_m, sizeof (Map), cudaMemcpyHostToDevice);
-    }
-}
-
-void cudaFreeMap(Map **m) {
-    Map h_map;
-    cudaMemcpy(&h_map, *m, sizeof (Map), cudaMemcpyDeviceToHost);
-
-    if (h_map.length > 0) {
-        cudaFree(h_map.A);
-        cudaFree(h_map.x);
-        cudaFree(h_map.dx);
-        cudaFree(h_map.y);
-        cudaFree(h_map.dy);
-        cudaFree(h_map.delta);
-        cudaFree(h_map.phi);
-    }
-    cudaFree(*m);
-}
-
-void cudaMallocData(Data **c, int iter, int p) {
-    if (iter > 0) {
-        int i;
-        cudaMalloc((void**) c, p * sizeof (Data));
-        for (i = 0; i < p; i++) {
-            Data helper_d;
-            helper_d.length = iter;
-            cudaMalloc((void**) &(helper_d.x), iter * sizeof (double));
-            cudaMalloc((void**) &(helper_d.dx), iter * sizeof (double));
-            cudaMalloc((void**) &(helper_d.y), iter * sizeof (double));
-            cudaMalloc((void**) &(helper_d.dy), iter * sizeof (double));
-            cudaMalloc((void**) &(helper_d.delta), iter * sizeof (double));
-            cudaMalloc((void**) &(helper_d.phi), iter * sizeof (double));
-            cudaMemcpy(&((*c)[i]), &helper_d, sizeof (Data), cudaMemcpyHostToDevice);
-        }
-    }
 }
 
 void cudaMemcpyMap(Map *dst_m, Map *src_m, cudaMemcpyKind kind) {
@@ -192,10 +52,10 @@ void cudaMemcpyMap(Map *dst_m, Map *src_m, cudaMemcpyKind kind) {
 
 }
 
-void cudaMemcpyData(Data *dst_c, Data *src_c, cudaMemcpyKind kind) {
-    Data helper_d;
+void cudaMemcpyData(DataArray *dst_c, DataArray *src_c, cudaMemcpyKind kind) {
+    DataArray helper_d;
     if (kind == cudaMemcpyDeviceToHost) {
-        cudaMemcpy(&helper_d, src_c, sizeof (Data), cudaMemcpyDeviceToHost);
+        cudaMemcpy(&helper_d, src_c, sizeof (DataArray), cudaMemcpyDeviceToHost);
         cudaMemcpy(dst_c->x, helper_d.x, helper_d.length * sizeof (double), kind);
         cudaMemcpy(dst_c->dx, helper_d.dx, helper_d.length * sizeof (double), kind);
         cudaMemcpy(dst_c->y, helper_d.y, helper_d.length * sizeof (double), kind);
@@ -203,7 +63,7 @@ void cudaMemcpyData(Data *dst_c, Data *src_c, cudaMemcpyKind kind) {
         cudaMemcpy(dst_c->delta, helper_d.delta, helper_d.length * sizeof (double), kind);
         cudaMemcpy(dst_c->phi, helper_d.phi, helper_d.length * sizeof (double), kind);
     } else if (kind == cudaMemcpyHostToDevice) {
-        cudaMemcpy(&helper_d, dst_c, sizeof (Data), cudaMemcpyDeviceToHost);
+        cudaMemcpy(&helper_d, dst_c, sizeof (DataArray), cudaMemcpyDeviceToHost);
         cudaMemcpy(helper_d.x, src_c->x, helper_d.length * sizeof (double), kind);
         cudaMemcpy(helper_d.dx, src_c->dx, helper_d.length * sizeof (double), kind);
         cudaMemcpy(helper_d.y, src_c->y, helper_d.length * sizeof (double), kind);
@@ -218,10 +78,10 @@ void cudaMemcpyData(Data *dst_c, Data *src_c, cudaMemcpyKind kind) {
 
 }
 
-void cudaMemcpyFirstData(Data *dst_c, Data *src_c, int p) {
-    Data helper_c;
+void cudaMemcpyFirstData(DataArray *dst_c, DataArray *src_c, int p) {
+    DataArray helper_c;
     for (int i = 0; i < p; i++) {
-        cudaMemcpy(&helper_c, &(dst_c[i]), sizeof (Data), cudaMemcpyDeviceToHost);
+        cudaMemcpy(&helper_c, &(dst_c[i]), sizeof (DataArray), cudaMemcpyDeviceToHost);
         cudaMemcpy(helper_c.x, src_c[i].x, sizeof (double), cudaMemcpyHostToDevice);
         cudaMemcpy(helper_c.dx, src_c[i].dx, sizeof (double), cudaMemcpyHostToDevice);
         cudaMemcpy(helper_c.y, src_c[i].y, sizeof (double), cudaMemcpyHostToDevice);
@@ -231,22 +91,6 @@ void cudaMemcpyFirstData(Data *dst_c, Data *src_c, int p) {
     }
 }
 
-void cudaFreeData(Data **c, int p) {
-    Data helper_d;
-    int i;
-    for (i = 0; i < p; i++) {
-        cudaMemcpy(&helper_d, &((*c)[i]), sizeof (Data), cudaMemcpyDeviceToHost);
-        if (helper_d.length > 0) {
-            cudaFree(helper_d.x);
-            cudaFree(helper_d.dx);
-            cudaFree(helper_d.y);
-            cudaFree(helper_d.dy);
-            cudaFree(helper_d.delta);
-            cudaFree(helper_d.phi);
-        }
-    }
-    cudaFree(*c);
-}
 
 void readMap(FILE *fp, Map *m, int nr) {
     char* line = (char*) malloc(200 * sizeof (char));
@@ -383,7 +227,7 @@ void scanInputData(char *fileName, int *count) {
     free(line);
 }
 
-void getInputData(Data *c) {
+void getInputData(DataArray *c) {
     fprintf(stderr, "Begin values of the 6 dimentions: ");
 
     scanf("%lf %lf %lf %lf %lf %lf",
@@ -396,7 +240,7 @@ void getInputData(Data *c) {
             );
 }
 
-void readInputData(Data **c, char *fileName, int count) {
+void readInputData(DataArray **c, char *fileName, int count) {
     FILE *fp = fopen(fileName, "r");
     if (fp == NULL) {
         fprintf(stderr, "Error while opening the coefficients file: %s\n", fileName);
@@ -417,7 +261,7 @@ void readInputData(Data **c, char *fileName, int count) {
     fclose(fp);
 }
 
-void calcData(Data *c, int idx, Map *m, double *newValue) {
+void calcData(DataArray *c, int idx, Map *m, double *newValue) {
     double *nums = (double*) calloc((*m).length, sizeof (double));
 
     for (int i = 0; i < (*m).length; i++) {
@@ -433,7 +277,7 @@ void calcData(Data *c, int idx, Map *m, double *newValue) {
     free(nums);
 }
 
-__device__ void cudaCalcData(Data *c, int idx, Map *m, double *newValue) {
+__device__ void cudaCalcData(DataArray *c, int idx, Map *m, double *newValue) {
     double *nums = (double*) malloc((*m).length * sizeof (double));
     memset(nums, 0, (*m).length * sizeof (double));
     for (int i = 0; i < (*m).length; i++) {
@@ -449,7 +293,7 @@ __device__ void cudaCalcData(Data *c, int idx, Map *m, double *newValue) {
     free(nums);
 }
 
-void kernel(Data *c, Map *x, Map *dx, Map *y, Map *dy, Map *delta, Map *phi, int particleCount, int iter) {
+void kernel(DataArray *c, Map *x, Map *dx, Map *y, Map *dy, Map *delta, Map *phi, int particleCount, int iter) {
     for (int n = 0; n < particleCount; n++) {
         for (int i = 0; i < iter - 1; i++) {
             calcData(&(c[n]), i, x, &(c[n].x[i + 1]));
@@ -462,7 +306,7 @@ void kernel(Data *c, Map *x, Map *dx, Map *y, Map *dy, Map *delta, Map *phi, int
     }
 }
 
-__global__ void cudaKernel(Data *c, Map *x, Map *dx, Map *y, Map *dy, Map *delta, Map *phi, int particleCount, int iter) {
+__global__ void cudaKernel(DataArray *c, Map *x, Map *dx, Map *y, Map *dy, Map *delta, Map *phi, int particleCount, int iter) {
     int sizeX = gridDim.x;
     int idx = blockIdx.x;
     int sizeY = blockDim.x;
@@ -488,8 +332,8 @@ int main(int argc, char **argv) {
     int xSize, dxSize, ySize, dySize, deltaSize, phiSize, argcCounter, particleCount = 1, iter = ITER;
     Map x, dx, y, dy, delta, phi;
     Map *dev_x, *dev_dx, *dev_y, *dev_dy, *dev_delta, *dev_phi;
-    Data *c;
-    Data *dev_c;
+    DataArray *c;
+    DataArray *dev_c;
     Properties v;
 
     float h2dTime = 0, kTime = 0, d2hTime;
@@ -660,15 +504,15 @@ int main(int argc, char **argv) {
     // read the coefficients from user input
     if (strncmp(inputFileName, "\0", 1) == 0) {
         fprintf(stderr, "malloc data\n");
-        mallocData(&c, iter, particleCount);
-        cudaMallocData(&dev_c, iter, particleCount);
+        mallocDataArray(&c, iter, particleCount);
+        cudaMallocDataArray(&dev_c, iter, particleCount);
         fprintf(stderr, "read input\n");
         getInputData(c);
     } else {
         scanInputData(inputFileName, &particleCount);
         fprintf(stderr, "malloc data\n");
-        mallocData(&c, iter, particleCount);
-        cudaMallocData(&dev_c, iter, particleCount);
+        mallocDataArray(&c, iter, particleCount);
+        cudaMallocDataArray(&dev_c, iter, particleCount);
         fprintf(stderr, "read input\n");
         readInputData(&c, inputFileName, particleCount);
         fprintf(stderr, "Particle count: %d\n", particleCount);
@@ -764,8 +608,8 @@ int main(int argc, char **argv) {
     cudaFreeMap(&dev_dy);
     cudaFreeMap(&dev_delta);
     cudaFreeMap(&dev_phi);
-    freeData(&c, particleCount);
-    cudaFreeData(&dev_c, particleCount);
+    freeDataArray(&c, particleCount);
+    cudaFreeDataArray(&dev_c, particleCount);
     free(outputFileName);
     fprintf(stderr, "Output is created. Press Enter to continue...\n");
     getchar();
