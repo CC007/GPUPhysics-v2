@@ -78,31 +78,38 @@ void cudaFreeDataArray(DataArray *dataArray, int particleCount) {
 		wprintf("The map could not be freed");
 	}
 }
-/*
-void cudaMemcpyMap(Map *dst_m, Map *src_m, cudaMemcpyKind kind) {
-	Map helper_m;
+
+void cudaMemcpyDataArray(DataArray destinationDataArray, DataArray sourceDataArray, cudaMemcpyKind kind) {
+	DataArray hostHelperDataArray;
+	if (safeMalloc((void**) &hostHelperDataArray, 1, sizeof (struct _DataArray))) {
+		eprintf("The map could not be copied (temporary host map alloc failed)");
+	}
+	int memcpyFailed = 0;
 	if (kind == cudaMemcpyDeviceToHost) {
-		cudaMemcpy(&helper_m, src_m, sizeof (Map), cudaMemcpyDeviceToHost);
-		cudaMemcpy(dst_m->A, helper_m.A, helper_m.length * sizeof (double), kind);
-		cudaMemcpy(dst_m->x, helper_m.x, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(dst_m->dx, helper_m.dx, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(dst_m->y, helper_m.y, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(dst_m->dy, helper_m.dy, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(dst_m->delta, helper_m.delta, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(dst_m->phi, helper_m.phi, helper_m.length * sizeof (int), kind);
+		if (safeCudaMemcpyDtH(hostHelperDataArray, sourceDataArray, 1, sizeof (struct _DataArray))) {
+			eprintf("The data array could not be copied (source map pointers couldn't be accessed)");
+		}
+		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->x, hostHelperDataArray->x, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->dx, hostHelperDataArray->dx, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->y, hostHelperDataArray->y, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->dy, hostHelperDataArray->dy, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->delta, hostHelperDataArray->delta, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->phi, hostHelperDataArray->phi, hostHelperDataArray->length, sizeof (double));
 	} else if (kind == cudaMemcpyHostToDevice) {
-		cudaMemcpy(&helper_m, dst_m, sizeof (Map), cudaMemcpyDeviceToHost);
-		cudaMemcpy(helper_m.A, src_m->A, helper_m.length * sizeof (double), kind);
-		cudaMemcpy(helper_m.x, src_m->x, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(helper_m.dx, src_m->dx, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(helper_m.y, src_m->y, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(helper_m.dy, src_m->dy, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(helper_m.delta, src_m->delta, helper_m.length * sizeof (int), kind);
-		cudaMemcpy(helper_m.phi, src_m->phi, helper_m.length * sizeof (int), kind);
+		if (safeCudaMemcpyDtH(hostHelperDataArray, sourceDataArray, 1, sizeof (struct _DataArray))) {
+			eprintf("The data array could not be copied (source map pointers couldn't be accessed)");
+		}
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->x, sourceDataArray->x, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->dx, sourceDataArray->dx, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->y, sourceDataArray->y, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->dy, sourceDataArray->dy, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->delta, sourceDataArray->delta, hostHelperDataArray->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->phi, sourceDataArray->phi, hostHelperDataArray->length, sizeof (double));
 	} else {
-		fprintf(stderr, "DeviceToDevice is not yet supported for maps!\n");
-		getchar();
-		exit(EXIT_FAILURE);
+		eprintf("DeviceToDevice is not yet supported for data arrays!\n");
+	}
+	if(memcpyFailed){
+			eprintf("The data array could not be copied (copying the content of the data array failed)");
 	}
 
-}*/
+}

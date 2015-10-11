@@ -23,36 +23,7 @@ void scanFile(FILE* fp, int *size) {
     }
     free(line);
 }
-
-void cudaMemcpyMap(Map *dst_m, Map *src_m, cudaMemcpyKind kind) {
-    Map helper_m;
-    if (kind == cudaMemcpyDeviceToHost) {
-        cudaMemcpy(&helper_m, src_m, sizeof (Map), cudaMemcpyDeviceToHost);
-        cudaMemcpy(dst_m->A, helper_m.A, helper_m.length * sizeof (double), kind);
-        cudaMemcpy(dst_m->x, helper_m.x, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(dst_m->dx, helper_m.dx, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(dst_m->y, helper_m.y, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(dst_m->dy, helper_m.dy, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(dst_m->delta, helper_m.delta, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(dst_m->phi, helper_m.phi, helper_m.length * sizeof (int), kind);
-    } else if (kind == cudaMemcpyHostToDevice) {
-        cudaMemcpy(&helper_m, dst_m, sizeof (Map), cudaMemcpyDeviceToHost);
-        cudaMemcpy(helper_m.A, src_m->A, helper_m.length * sizeof (double), kind);
-        cudaMemcpy(helper_m.x, src_m->x, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(helper_m.dx, src_m->dx, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(helper_m.y, src_m->y, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(helper_m.dy, src_m->dy, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(helper_m.delta, src_m->delta, helper_m.length * sizeof (int), kind);
-        cudaMemcpy(helper_m.phi, src_m->phi, helper_m.length * sizeof (int), kind);
-    } else {
-        fprintf(stderr, "DeviceToDevice is not yet supported for maps!\n");
-        getchar();
-        exit(EXIT_FAILURE);
-    }
-
-}
-
-void cudaMemcpyData(DataArray *dst_c, DataArray *src_c, cudaMemcpyKind kind) {
+void cudaMemcpyDataArray(DataArray *dst_c, DataArray *src_c, cudaMemcpyKind kind) {
     DataArray helper_d;
     if (kind == cudaMemcpyDeviceToHost) {
         cudaMemcpy(&helper_d, src_c, sizeof (DataArray), cudaMemcpyDeviceToHost);
@@ -500,7 +471,7 @@ int main(int argc, char **argv) {
     for (int n = 0; n < particleCount; n++) {
         // if acceleration is on, copy input from device to host
         if (accelerate) {
-            cudaMemcpyData(&(c[n]), &(dev_c[n]), cudaMemcpyDeviceToHost);
+            cudaMemcpyDataArray(&(c[n]), &(dev_c[n]), cudaMemcpyDeviceToHost);
         }
         // show or save
         FILE* outputFile;
@@ -528,7 +499,7 @@ int main(int argc, char **argv) {
             outputFile = stdout;
         }
         if (accelerate) {
-            cudaMemcpyData(&(c[n]), &(dev_c[n]), cudaMemcpyDeviceToHost);
+            cudaMemcpyDataArray(&(c[n]), &(dev_c[n]), cudaMemcpyDeviceToHost);
         }
         for (int i = 0; i < iter; i++) {
             fprintf(outputFile, "%10.7f %10.7f %10.7f %10.7f %10.7f %10.7f\n", c[n].x[i], c[n].dx[i], c[n].y[i], c[n].dy[i], c[n].delta[i], c[n].phi[i]);

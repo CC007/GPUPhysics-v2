@@ -34,7 +34,7 @@ void cudaMallocMap(Map *mapPointer, int rowCount) {
 		if (mallocFailed) {
 			eprintf("The map's contents could not be allocated");
 		}
-		if (safeCudaMemcpyHtD(&devHelperMap, &hostHelperMap, 1, sizeof (struct _Map))) {
+		if (safeCudaMemcpyHtD(devHelperMap, hostHelperMap, 1, sizeof (struct _Map))) {
 			eprintf("The map's contents could not be made available in device memory (temporary host map memcpy failed)");
 		}
 		if (safeFree((void**) &hostHelperMap)) {
@@ -73,5 +73,41 @@ void cudaFreeMap(Map *mapPointer) {
 	}
 	if (safeCudaFree((void**) mapPointer)) {
 		wprintf("The map could not be freed");
+	}
+}
+
+void cudaMemcpyMap(Map destinationMap, Map sourceMap, cudaMemcpyKind kind) {
+	Map hostHelperMap;
+	if (safeMalloc((void**) &hostHelperMap, 1, sizeof (struct _Map))) {
+		eprintf("The map could not be copied (temporary host map alloc failed)");
+	}
+	int memcpyFailed = 0;
+	if (kind == cudaMemcpyDeviceToHost) {
+		if (safeCudaMemcpyDtH(hostHelperMap, sourceMap, 1, sizeof (struct _Map))) {
+			eprintf("The map could not be copied (source map pointers couldn't be accessed)");
+		}
+		memcpyFailed += safeCudaMemcpyDtH(destinationMap->A, hostHelperMap->A, hostHelperMap->length, sizeof (double));
+		memcpyFailed += safeCudaMemcpyDtH(destinationMap->x, hostHelperMap->x, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyDtH(destinationMap->dx, hostHelperMap->dx, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyDtH(destinationMap->y, hostHelperMap->y, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyDtH(destinationMap->dy, hostHelperMap->dy, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyDtH(destinationMap->delta, hostHelperMap->delta, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyDtH(destinationMap->phi, hostHelperMap->phi, hostHelperMap->length, sizeof (int));
+	} else if (kind == cudaMemcpyHostToDevice) {
+		if (safeCudaMemcpyDtH(hostHelperMap, destinationMap, 1, sizeof (struct _Map))) {
+			eprintf("The map could not be copied (destination map pointers couldn't be accessed)");
+		}
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->A, sourceMap->A, hostHelperMap->length,sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->x, sourceMap->x, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->dx, sourceMap->dx, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->y, sourceMap->y, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->dy, sourceMap->dy, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->delta, sourceMap->delta, hostHelperMap->length, sizeof (int));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->phi, sourceMap->phi, hostHelperMap->length, sizeof (int));
+	} else {
+		eprintf("DeviceToDevice is not yet supported for maps!\n");
+	}
+	if(memcpyFailed){
+			eprintf("The map could not be copied (copying the content of the map failed)");
 	}
 }
