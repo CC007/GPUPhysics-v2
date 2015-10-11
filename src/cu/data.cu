@@ -21,7 +21,7 @@ void cudaMallocDataArray(DataArray *dataArray, int iterationCount, int particleC
 		eprintf("The data array could not be allocated on the device");
 	}
 	for (int i = 0; i < particleCount; i++) {
-		hostHelperDataArray[i].length = iterationCount;
+		hostHelperDataArray[i]->length = iterationCount;
 	}
 	if (iterationCount > 0) {
 		int mallocFailed = 0;
@@ -50,11 +50,11 @@ void cudaFreeDataArray(DataArray *dataArray, int particleCount) {
 	DataArray devHelperDataArray = *dataArray;
 	DataArray hostHelperDataArray;
 	if (safeMalloc((void**) &hostHelperDataArray, 1, sizeof (struct _DataArray))) {
-		wprintf("The map's contents could not be accessed (temporary host map alloc failed)");
+		wprintf("The map's contents could not be accessed (temporary host data array alloc failed)");
 		return;
 	}
 	if (safeCudaMemcpyDtH(&hostHelperDataArray, &devHelperDataArray, 1, sizeof (struct _DataArray))) {
-		wprintf("The map's contents could not be accessed (temporary host map memcpy failed)");
+		wprintf("The map's contents could not be accessed (temporary host data array memcpy failed)");
 		return;
 	}
 	int freeFailed = 0;
@@ -87,7 +87,7 @@ void cudaMemcpyDataArray(DataArray destinationDataArray, DataArray sourceDataArr
 	int memcpyFailed = 0;
 	if (kind == cudaMemcpyDeviceToHost) {
 		if (safeCudaMemcpyDtH(hostHelperDataArray, sourceDataArray, 1, sizeof (struct _DataArray))) {
-			eprintf("The data array could not be copied (source map pointers couldn't be accessed)");
+			eprintf("The data array could not be copied (source data array pointers couldn't be accessed)");
 		}
 		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->x, hostHelperDataArray->x, hostHelperDataArray->length, sizeof (double));
 		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->dx, hostHelperDataArray->dx, hostHelperDataArray->length, sizeof (double));
@@ -97,7 +97,7 @@ void cudaMemcpyDataArray(DataArray destinationDataArray, DataArray sourceDataArr
 		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->phi, hostHelperDataArray->phi, hostHelperDataArray->length, sizeof (double));
 	} else if (kind == cudaMemcpyHostToDevice) {
 		if (safeCudaMemcpyDtH(hostHelperDataArray, sourceDataArray, 1, sizeof (struct _DataArray))) {
-			eprintf("The data array could not be copied (source map pointers couldn't be accessed)");
+			eprintf("The data array could not be copied (source data array pointers couldn't be accessed)");
 		}
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->x, sourceDataArray->x, hostHelperDataArray->length, sizeof (double));
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->dx, sourceDataArray->dx, hostHelperDataArray->length, sizeof (double));
@@ -108,8 +108,32 @@ void cudaMemcpyDataArray(DataArray destinationDataArray, DataArray sourceDataArr
 	} else {
 		eprintf("DeviceToDevice is not yet supported for data arrays!\n");
 	}
-	if(memcpyFailed){
-			eprintf("The data array could not be copied (copying the content of the data array failed)");
+	if (memcpyFailed) {
+		eprintf("The data array could not be copied (copying the content of the data array failed)");
 	}
+	if (safeFree((void**) &hostHelperDataArray)) {
+		wprintf("The temporary host data array's contents could not be freed");
+	}
+}
 
+void cudaMemcpyFirstDataArray(DataArray *destinationDataArray, DataArray *sourceDataArray, int particleCount) {
+	DataArray helperDataArray;
+	for (int i = 0; i < particleCount; i++) {
+		if (safeCudaMemcpyDtH(hostHelperDataArray, destinationDataArray[i], 1, sizeof (struct _DataArray))) {
+			eprintf("The data array could not be copied (source map pointers couldn't be accessed)");
+		}
+		int memcpyFailed = 0;
+		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->x, sourceDataArray[i]->x, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->dx, sourceDataArray[i]->dx, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->y, sourceDataArray[i]->y, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->dy, sourceDataArray[i]->dy, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->delta, sourceDataArray[i]->delta, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->phi, sourceDataArray[i]->phi, sizeof (double));
+	}
+	if (memcpyFailed) {
+		eprintf("The data array could not be copied (copying the content of the data array failed)");
+	}
+	if (safeFree((void**) &hostHelperDataArray)) {
+		wprintf("The temporary host data array's contents could not be freed");
+	}
 }

@@ -23,45 +23,6 @@ void scanFile(FILE* fp, int *size) {
     }
     free(line);
 }
-void cudaMemcpyDataArray(DataArray *dst_c, DataArray *src_c, cudaMemcpyKind kind) {
-    DataArray helper_d;
-    if (kind == cudaMemcpyDeviceToHost) {
-        cudaMemcpy(&helper_d, src_c, sizeof (DataArray), cudaMemcpyDeviceToHost);
-        cudaMemcpy(dst_c->x, helper_d.x, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->dx, helper_d.dx, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->y, helper_d.y, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->dy, helper_d.dy, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->delta, helper_d.delta, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(dst_c->phi, helper_d.phi, helper_d.length * sizeof (double), kind);
-    } else if (kind == cudaMemcpyHostToDevice) {
-        cudaMemcpy(&helper_d, dst_c, sizeof (DataArray), cudaMemcpyDeviceToHost);
-        cudaMemcpy(helper_d.x, src_c->x, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(helper_d.dx, src_c->dx, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(helper_d.y, src_c->y, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(helper_d.dy, src_c->dy, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(helper_d.delta, src_c->delta, helper_d.length * sizeof (double), kind);
-        cudaMemcpy(helper_d.phi, src_c->phi, helper_d.length * sizeof (double), kind);
-    } else {
-        fprintf(stderr, "DeviceToDevice is not yet supported for data!\n");
-        getchar();
-        exit(EXIT_FAILURE);
-    }
-
-}
-
-void cudaMemcpyFirstData(DataArray *dst_c, DataArray *src_c, int p) {
-    DataArray helper_c;
-    for (int i = 0; i < p; i++) {
-        cudaMemcpy(&helper_c, &(dst_c[i]), sizeof (DataArray), cudaMemcpyDeviceToHost);
-        cudaMemcpy(helper_c.x, src_c[i].x, sizeof (double), cudaMemcpyHostToDevice);
-        cudaMemcpy(helper_c.dx, src_c[i].dx, sizeof (double), cudaMemcpyHostToDevice);
-        cudaMemcpy(helper_c.y, src_c[i].y, sizeof (double), cudaMemcpyHostToDevice);
-        cudaMemcpy(helper_c.dy, src_c[i].dy, sizeof (double), cudaMemcpyHostToDevice);
-        cudaMemcpy(helper_c.delta, src_c[i].delta, sizeof (double), cudaMemcpyHostToDevice);
-        cudaMemcpy(helper_c.phi, src_c[i].phi, sizeof (double), cudaMemcpyHostToDevice);
-    }
-}
-
 
 void readMap(FILE *fp, Map *m, int nr) {
     char* line = (char*) malloc(200 * sizeof (char));
@@ -460,7 +421,7 @@ int main(int argc, char **argv) {
         cudaMemcpyMap(dev_dy, &dy, cudaMemcpyHostToDevice);
         cudaMemcpyMap(dev_delta, &delta, cudaMemcpyHostToDevice);
         cudaMemcpyMap(dev_phi, &phi, cudaMemcpyHostToDevice);
-        cudaMemcpyFirstData(dev_c, c, particleCount);
+        cudaMemcpyFirstDataArray(dev_c, c, particleCount);
 
         cudaEventRecord(stopH2D);
         

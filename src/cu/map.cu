@@ -97,7 +97,7 @@ void cudaMemcpyMap(Map destinationMap, Map sourceMap, cudaMemcpyKind kind) {
 		if (safeCudaMemcpyDtH(hostHelperMap, destinationMap, 1, sizeof (struct _Map))) {
 			eprintf("The map could not be copied (destination map pointers couldn't be accessed)");
 		}
-		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->A, sourceMap->A, hostHelperMap->length,sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->A, sourceMap->A, hostHelperMap->length, sizeof (double));
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->x, sourceMap->x, hostHelperMap->length, sizeof (int));
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->dx, sourceMap->dx, hostHelperMap->length, sizeof (int));
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperMap->y, sourceMap->y, hostHelperMap->length, sizeof (int));
@@ -107,7 +107,10 @@ void cudaMemcpyMap(Map destinationMap, Map sourceMap, cudaMemcpyKind kind) {
 	} else {
 		eprintf("DeviceToDevice is not yet supported for maps!\n");
 	}
-	if(memcpyFailed){
-			eprintf("The map could not be copied (copying the content of the map failed)");
+	if (memcpyFailed) {
+		eprintf("The map could not be copied (copying the content of the map failed)");
+	}
+	if (safeFree((void**) &hostHelperMap)) {
+		wprintf("The temporary host data array's contents could not be freed");
 	}
 }
