@@ -117,18 +117,21 @@ void cudaMemcpyDataArray(DataArray destinationDataArray, DataArray sourceDataArr
 }
 
 void cudaMemcpyFirstDataArray(DataArray *destinationDataArray, DataArray *sourceDataArray, int particleCount) {
-	DataArray helperDataArray;
+	DataArray hostHelperDataArray;
+	if (safeMalloc((void**) &hostHelperDataArray, particleCount, sizeof (struct _DataArray))) {
+		eprintf("The map could not be copied (temporary host map alloc failed)");
+	}
+	int memcpyFailed = 0;
 	for (int i = 0; i < particleCount; i++) {
 		if (safeCudaMemcpyDtH(hostHelperDataArray, destinationDataArray[i], 1, sizeof (struct _DataArray))) {
 			eprintf("The data array could not be copied (source map pointers couldn't be accessed)");
 		}
-		int memcpyFailed = 0;
-		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->x, sourceDataArray[i]->x, sizeof (double));
-		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->dx, sourceDataArray[i]->dx, sizeof (double));
-		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->y, sourceDataArray[i]->y, sizeof (double));
-		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->dy, sourceDataArray[i]->dy, sizeof (double));
-		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->delta, sourceDataArray[i]->delta, sizeof (double));
-		memcpyFailed += safeCudaMemcpyHtD(helperDataArray->phi, sourceDataArray[i]->phi, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->x, sourceDataArray[i]->x, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->dx, sourceDataArray[i]->dx, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->y, sourceDataArray[i]->y, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->dy, sourceDataArray[i]->dy, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->delta, sourceDataArray[i]->delta, sizeof (double));
+		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->phi, sourceDataArray[i]->phi, sizeof (double));
 	}
 	if (memcpyFailed) {
 		eprintf("The data array could not be copied (copying the content of the data array failed)");
