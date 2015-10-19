@@ -5,13 +5,18 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="include" displayName="include" projectFiles="true">
+        <itemPath>include/data.cuh</itemPath>
         <itemPath>include/data.h</itemPath>
+        <itemPath>include/extendedio.h</itemPath>
+        <itemPath>include/kernel.cuh</itemPath>
+        <itemPath>include/kernel.h</itemPath>
+        <itemPath>include/map.cuh</itemPath>
         <itemPath>include/map.h</itemPath>
         <itemPath>include/properties.h</itemPath>
+        <itemPath>include/safemem.cuh</itemPath>
+        <itemPath>include/safemem.h</itemPath>
+        <itemPath>include/safememstates.h</itemPath>
       </logicalFolder>
-      <itemPath>include/extendedio.h</itemPath>
-      <itemPath>include/kernel.h</itemPath>
-      <itemPath>include/safemem.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -35,21 +40,20 @@
       <logicalFolder name="src" displayName="src" projectFiles="true">
         <logicalFolder name="cc" displayName="cc" projectFiles="true">
           <itemPath>src/cc/data.c</itemPath>
+          <itemPath>src/cc/extendedio.c</itemPath>
+          <itemPath>src/cc/kernel.c</itemPath>
           <itemPath>src/cc/map.c</itemPath>
           <itemPath>src/cc/properties.c</itemPath>
           <itemPath>src/cc/safemem.c</itemPath>
         </logicalFolder>
         <logicalFolder name="cu" displayName="cu" projectFiles="true">
           <itemPath>src/cu/data.cu</itemPath>
+          <itemPath>src/cu/kernel.cu</itemPath>
           <itemPath>src/cu/map.cu</itemPath>
-          <itemPath>src/cu/oldkernel.cu</itemPath>
           <itemPath>src/cu/physicsSimulation.cu</itemPath>
           <itemPath>src/cu/safemem.cu</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>src/cc/extendedio.c</itemPath>
-      <itemPath>src/cc/kernel.c</itemPath>
-      <itemPath>src/cu/kernel.cu</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -106,17 +110,27 @@
         <packFileList>
         </packFileList>
       </packaging>
+      <item path="include/data.cuh" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/data.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/extendedio.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/kernel.cuh" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/kernel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/map.cuh" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/map.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/properties.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/safemem.cuh" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/safemem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/safememstates.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
       </item>
@@ -147,8 +161,6 @@
       <item path="src/cu/kernel.cu" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
       </item>
@@ -199,17 +211,27 @@
         <packFileList>
         </packFileList>
       </packaging>
+      <item path="include/data.cuh" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/data.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/extendedio.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/kernel.cuh" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/kernel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/map.cuh" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/map.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/properties.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/safemem.cuh" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/safemem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/safememstates.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
       </item>
@@ -240,8 +262,6 @@
       <item path="src/cu/kernel.cu" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/map.cu" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/cu/oldkernel.cu" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
       </item>

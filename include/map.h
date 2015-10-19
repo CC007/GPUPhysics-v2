@@ -12,22 +12,26 @@
 extern "C" {
 #endif
 
-    typedef struct _Map {
-        int length;
-        double *A;
-        int *x;
-        int *dx;
-        int *y;
-        int *dy;
-        int *delta;
-        int *phi;
-    } *Map;
+	typedef struct _Map {
+		int length;
+		double *A;
+		int *x;
+		int *dx;
+		int *y;
+		int *dy;
+		int *delta;
+		int *phi;
+	} *Map;
 
-    void mallocMap(Map *mapPointer, int rowCount);
-    void freeMap(Map *mapPointer);
-    void cudaMallocMap(Map *mapPointer, int rowCount);
-    void cudaFreeMap(Map *mapPointer);
-    
+	void mallocMap(Map *mapPointer, int rowCount);
+
+	void freeMap(Map *mapPointer);
+
+	void cudaMallocMap(Map *mapPointer, int rowCount);
+
+	void cudaFreeMap(Map *mapPointer);
+
+
 #ifdef	__cplusplus
 }
 #endif

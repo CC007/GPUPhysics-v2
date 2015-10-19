@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../../include/safemem.h"
+#include "../../include/extendedio.h"
 
 /* Allocate elemCount * elemSize bytes of memory
  * The program will check if the memory was successfully allocated
@@ -24,7 +25,7 @@ int safeMalloc(void **pp, int elemCount, int elemSize) {
 
     p = malloc(elemCount * elemSize);
     if (p == NULL) {
-        fprintf(stderr, "The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
+        wprintf("The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
         return ALLOC_FAILURE;
     }
     *pp = p;
@@ -47,7 +48,7 @@ int safeCalloc(void **pp, int elemCount, int elemSize) {
 
     p = calloc(elemCount, elemSize);
     if (p == NULL) {
-        fprintf(stderr, "The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
+        wprintf("The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
         return ALLOC_FAILURE;
     }
     *pp = p;
@@ -70,7 +71,7 @@ int safeRealloc(void **pp, int elemCount, int elemSize) {
 
     p = realloc(*pp, elemCount * elemSize);
     if (p == NULL) {
-        fprintf(stderr, "The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
+        wprintf("The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
         return ALLOC_FAILURE;
     }
     *pp = p;
@@ -94,6 +95,6 @@ int safeFree(void **pp) {
         *pp = NULL;
         return FREE_SUCCESS;
     }
-    fprintf(stderr, "Tried to free a pointer to NULL\n");
+    wprintf("Tried to free a pointer to NULL\n");
     return FREE_FAILURE;
 }

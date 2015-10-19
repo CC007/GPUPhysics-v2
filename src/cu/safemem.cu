@@ -7,7 +7,10 @@
 #include <stdio.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
+
+#include "../../include/extendedio.h"
 #include "../../include/safemem.h"
+#include "../../include/safemem.cuh"
 
 /* Allocate elemCount * elemSize bytes of device memory
  * The program will check if the memory was successfully allocated
@@ -23,7 +26,7 @@
 int safeCudaMalloc(void **pp, int elemCount, int elemSize) {
     void *p;
     if (cudaMalloc(&p, elemCount * elemSize) != cudaSuccess) {
-        fprintf(stderr, "The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
+        wprintf("The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
         return ALLOC_FAILURE;
     }
     *pp = p;
@@ -72,7 +75,7 @@ int safeCudaRealloc(void **pp, int oldElemCount, int newElemCount, int elemSize)
         return ALLOC_FAILURE;
     }
     if (safeCudaMemcpyDtD(p, *pp, oldElemCount, elemSize)) {
-        fprintf(stderr, " New Element count: %d\n", newElemCount);
+        wprintf(" New Element count: %d\n", newElemCount);
         return ALLOC_FAILURE;
     }
     safeCudaFree(pp); // no problem if it fails, but will probably mean that there is a mem leak
@@ -91,11 +94,11 @@ int safeCudaRealloc(void **pp, int oldElemCount, int newElemCount, int elemSize)
  */
 int safeCudaFree(void **pp) {
     if (*pp == NULL) {
-        fprintf(stderr, "Tried to free a pointer to NULL\n");
+        wprintf("Tried to free a pointer to NULL\n");
         return FREE_FAILURE;
     }
     if (cudaFree(*pp) != cudaSuccess) {
-        fprintf(stderr, "Memory is already freed\n");
+        wprintf("Memory is already freed\n");
         return FREE_FAILURE;
     }
     *pp = NULL;
@@ -116,7 +119,7 @@ int safeCudaFree(void **pp) {
  */
 int safeCudaMemset(void *p, int value, int elemCount, int elemSize) {
     if (cudaMemset(p, value, elemCount * elemSize) != cudaSuccess) {
-        fprintf(stderr, "The elements could not be set to %d\n", value);
+        wprintf("The elements could not be set to %d\n", value);
         return MEMSET_FAILURE;
     }
     return MEMSET_SUCCESS;
@@ -137,7 +140,8 @@ int safeCudaMemset(void *p, int value, int elemCount, int elemSize) {
  */
 int safeCudaMemcpy(void *destination, const void *source, int elemCount, int elemSize, cudaMemcpyKind kind) {
     if (cudaMemcpy(destination, source, elemCount * elemSize, kind) != cudaSuccess) {
-        fprintf(stderr, "The data could not be copied \n Element count: %d\n", elemCount);
+        wprintf("The data could not be copied \n");
+		iprintf("Element count: %d\n", elemCount);
         return MEMCPY_FAILURE;
     }
     return MEMCPY_SUCCESS;
@@ -198,4 +202,69 @@ int safeCudaMemcpyDtD(void *destination, const void *source, int elemCount, int 
         return MEMCPY_FAILURE;
     }
     return MEMCPY_SUCCESS;
+}
+
+/* Allocate elemCount * elemSize bytes of device memory from a kernel
+ * The program will check if the memory was successfully allocated
+ * 
+ *  \param pp - a pointer to the pointer that afterwards points to the allocated memory
+ *  \param elemCount - the number of elements in the newly allocated memory block
+ *  \param elemSize - the size (in bytes) of each element in the newly allocated memory block
+ * 
+ *  \return
+ *  ALLOC_SUCCESS - the memory is successfully allocated
+ *    ALLOC_FAILURE - the memory allocation was unsuccessful
+ */
+__device__ int safeDeviceMalloc(void **pp, int elemCount, int elemSize) {
+    void *p;
+
+    p = malloc(elemCount * elemSize);
+    if (p == NULL) {
+        printf("The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
+        return ALLOC_FAILURE;
+    }
+    *pp = p;
+    return ALLOC_SUCCESS;
+}
+
+/* Allocate elemCount * elemSize bytes of device memory from a kernel, all elements initialized to 0
+ * The program will check if the memory was successfully allocated
+ * 
+ *  \param pp - a pointer to the pointer that afterwards points to the allocated memory
+ *  \param elemCount - the number of elements in the newly allocated memory block
+ *  \param elemSize - the size (in bytes) of each element in the newly allocated memory block
+ * 
+ *  \return
+ *  ALLOC_SUCCESS - the memory is successfully allocated
+ *    ALLOC_FAILURE - the memory allocation was unsuccessful
+ */
+__device__ int safeDeviceCalloc(void **pp, int elemCount, int elemSize) {
+    void *p;
+    if (safeDeviceMalloc(&p, elemCount, elemSize)) {
+        return ALLOC_FAILURE;
+    }
+	memset(p, 0, elemCount * elemSize); // should always work if allocation succeeded
+    *pp = p;
+    return ALLOC_SUCCESS;
+}
+
+/* Free a device memory block from a kernel, allocated by 'safeMalloc', 'safeCalloc' or 'safeRealloc'
+ * The program will check if the pointer points to allocated memory
+ * 
+ *  \param pp - a pointer to the pointer to the allocated memory that needs to be freed
+ *  \param elemCount - the number of elements in the newly allocated memory block
+ *  \param elemSize - the size (in bytes) of each element in the newly allocated memory block
+ * 
+ *  \return
+ *  FREE_SUCCESS if the memory is successfully freed
+ *    FREE_FAILURE if *pp points to NULL
+ */
+__device__ int safeDeviceFree(void **pp) {
+    if (*pp != NULL) {
+        free(*pp);
+        *pp = NULL;
+        return FREE_SUCCESS;
+    }
+    printf("Tried to free a pointer to NULL\n");
+    return FREE_FAILURE;
 }

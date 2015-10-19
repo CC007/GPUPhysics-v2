@@ -15,7 +15,7 @@
 void mallocDataArray(DataArray *dataArray, int iterationCount, int particleCount) {
 	DataArray helperDataArray;
 	if (safeMalloc((void**) &helperDataArray, particleCount, sizeof (struct _DataArray))) {
-		eprintf("The data array could not be allocated");
+		eprintf("The data array could not be allocated\n");
 	}
 	for (int i = 0; i < particleCount; i++) {
 		helperDataArray[i].length = iterationCount;
@@ -31,7 +31,7 @@ void mallocDataArray(DataArray *dataArray, int iterationCount, int particleCount
 			mallocFailed += safeCalloc((void**) &(helperDataArray[i].phi), iterationCount, sizeof (double));
 		}
 		if (mallocFailed) {
-			eprintf("The data array's contents could not be allocated");
+			eprintf("The data array's contents could not be allocated\n");
 		}
 	}
 	*dataArray = helperDataArray;
@@ -51,9 +51,9 @@ void freeDataArray(DataArray *dataArray, int particleCount) {
 		}
 	}
 	if (freeFailed) {
-		wprintf("The data array's contents could not be freed");
+		wprintf("The data array's contents could not be freed\n");
 	}
 	if (safeFree((void**) dataArray)) {
-		wprintf("The data array could not be freed");
+		wprintf("The data array could not be freed\n");
 	}
 }

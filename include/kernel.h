@@ -13,13 +13,13 @@ extern "C" {
 #endif
 
 
-void sumArrayHelper(double *nums, int length, int interval) ;
+	void sumArrayHelper(double *nums, int length, int interval);
 
-double sumArray(double *nums, int length);
+	double sumArray(double *nums, int length);
 
-__device__ void cudaSumArrayHelper(double *nums, int length, int interval);
+	void calcData(DataArray dataArray, int iteration, Map map, double *newValue);
 
-__device__ double cudaSumArray(double *nums, int length);
+	void kernel(DataArray dataArray, Map x, Map dx, Map y, Map dy, Map delta, Map phi, int particleCount, int iterationCount);
 
 
 

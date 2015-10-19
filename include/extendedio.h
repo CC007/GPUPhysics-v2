@@ -15,6 +15,7 @@ extern "C" {
 
 	void eprintf(const char *format, ... );
 	void wprintf(const char *format, ... );
+	void iprintf(const char *format, ... );
 
 
 #ifdef	__cplusplus

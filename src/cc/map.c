@@ -20,7 +20,7 @@
 void mallocMap(Map *mapPointer, int rowCount) {
     Map helperMap;
     if (safeMalloc((void**) &helperMap, 1, sizeof (struct _Map))) {
-        eprintf("The map could not be allocated");
+        eprintf("The map could not be allocated\n");
     }
     helperMap->length = rowCount;
     if (rowCount > 0) {
@@ -33,7 +33,7 @@ void mallocMap(Map *mapPointer, int rowCount) {
         mallocFailed += safeCalloc((void**) &(helperMap->delta), rowCount, sizeof (int));
         mallocFailed += safeCalloc((void**) &(helperMap->phi), rowCount, sizeof (int));
         if (mallocFailed) {
-            eprintf("The map's contents could not be allocated");
+            eprintf("The map's contents could not be allocated\n");
         }
     }
     *mapPointer = helperMap;
@@ -56,9 +56,9 @@ void freeMap(Map *mapPointer) {
         freeFailed += safeFree((void**) &(helperMap->phi));
     }
     if (freeFailed) {
-        wprintf("The map's contents could not be freed");
+        wprintf("The map's contents could not be freed\n");
     }
     if (safeFree((void**) mapPointer)) {
-        wprintf("The map could not be freed");
+        wprintf("The map could not be freed\n");
     }
 }

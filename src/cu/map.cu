@@ -10,16 +10,17 @@
 
 #include "../../include/map.h"
 #include "../../include/safemem.h"
+#include "../../include/safemem.cuh"
 #include "../../include/extendedio.h"
 
 void cudaMallocMap(Map *mapPointer, int rowCount) {
 	Map hostHelperMap;
 	Map devHelperMap;
 	if (safeMalloc((void**) &hostHelperMap, 1, sizeof (struct _Map))) {
-		eprintf("The map could not be allocated on the host");
+		eprintf("The map could not be allocated on the host\n");
 	}
 	if (safeCudaMalloc((void**) &devHelperMap, 1, sizeof (struct _Map))) {
-		eprintf("The map could not be allocated on the device");
+		eprintf("The map could not be allocated on the device\n");
 	}
 	hostHelperMap->length = rowCount;
 	if (rowCount > 0) {
@@ -32,13 +33,13 @@ void cudaMallocMap(Map *mapPointer, int rowCount) {
 		mallocFailed += safeCudaCalloc((void**) &(hostHelperMap->delta), rowCount, sizeof (int));
 		mallocFailed += safeCudaCalloc((void**) &(hostHelperMap->phi), rowCount, sizeof (int));
 		if (mallocFailed) {
-			eprintf("The map's contents could not be allocated");
+			eprintf("The map's contents could not be allocated\n");
 		}
 		if (safeCudaMemcpyHtD(devHelperMap, hostHelperMap, 1, sizeof (struct _Map))) {
-			eprintf("The map's contents could not be made available in device memory (temporary host map memcpy failed)");
+			eprintf("The map's contents could not be made available in device memory (temporary host map memcpy failed)\n");
 		}
 		if (safeFree((void**) &hostHelperMap)) {
-			wprintf("The temporary host map's contents could not be freed");
+			wprintf("The temporary host map's contents could not be freed\n");
 		}
 		*mapPointer = devHelperMap;
 	}
@@ -48,11 +49,11 @@ void cudaFreeMap(Map *mapPointer) {
 	Map devHelperMap = *mapPointer;
 	Map hostHelperMap;
 	if (safeMalloc((void**) &hostHelperMap, 1, sizeof (struct _Map))) {
-		wprintf("The map's contents could not be accessed (temporary host map alloc failed)");
+		wprintf("The map's contents could not be accessed (temporary host map alloc failed)\n");
 		return;
 	}
-	if (safeCudaMemcpyDtH(&hostHelperMap, &devHelperMap, 1, sizeof (struct _Map))) {
-		wprintf("The map's contents could not be accessed (temporary host map memcpy failed)");
+	if (safeCudaMemcpyDtH(hostHelperMap, devHelperMap, 1, sizeof (struct _Map))) {
+		wprintf("The map's contents could not be accessed (temporary host map memcpy failed)\n");
 		return;
 	}
 	int freeFailed = 0;
@@ -66,25 +67,25 @@ void cudaFreeMap(Map *mapPointer) {
 		freeFailed += safeCudaFree((void**) &(hostHelperMap->phi));
 	}
 	if (freeFailed) {
-		wprintf("The map's contents could not be freed");
+		wprintf("The map's contents could not be freed\n");
 	}
 	if (safeFree((void**) &hostHelperMap)) {
-		wprintf("The temporary host map's contents could not be freed");
+		wprintf("The temporary host map's contents could not be freed\n");
 	}
 	if (safeCudaFree((void**) mapPointer)) {
-		wprintf("The map could not be freed");
+		wprintf("The map could not be freed\n");
 	}
 }
 
 void cudaMemcpyMap(Map destinationMap, Map sourceMap, cudaMemcpyKind kind) {
 	Map hostHelperMap;
 	if (safeMalloc((void**) &hostHelperMap, 1, sizeof (struct _Map))) {
-		eprintf("The map could not be copied (temporary host map alloc failed)");
+		eprintf("The map could not be copied (temporary host map alloc failed)\n");
 	}
 	int memcpyFailed = 0;
 	if (kind == cudaMemcpyDeviceToHost) {
 		if (safeCudaMemcpyDtH(hostHelperMap, sourceMap, 1, sizeof (struct _Map))) {
-			eprintf("The map could not be copied (source map pointers couldn't be accessed)");
+			eprintf("The map could not be copied (source map pointers couldn't be accessed)\n");
 		}
 		memcpyFailed += safeCudaMemcpyDtH(destinationMap->A, hostHelperMap->A, hostHelperMap->length, sizeof (double));
 		memcpyFailed += safeCudaMemcpyDtH(destinationMap->x, hostHelperMap->x, hostHelperMap->length, sizeof (int));
@@ -108,9 +109,9 @@ void cudaMemcpyMap(Map destinationMap, Map sourceMap, cudaMemcpyKind kind) {
 		eprintf("DeviceToDevice is not yet supported for maps!\n");
 	}
 	if (memcpyFailed) {
-		eprintf("The map could not be copied (copying the content of the map failed)");
+		eprintf("The map could not be copied (copying the content of the map failed)\n");
 	}
 	if (safeFree((void**) &hostHelperMap)) {
-		wprintf("The temporary host data array's contents could not be freed");
+		wprintf("The temporary host data array's contents could not be freed\n");
 	}
 }
