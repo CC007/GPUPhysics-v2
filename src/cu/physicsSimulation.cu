@@ -151,10 +151,14 @@ void readDataArray(DataArray dataArray, char *fileName, int count) {
 int main(int argc, char **argv) {
 	char fileName[200] = "";
 	char inputFileName[200] = "";
-	char *outputFileName = (char*) malloc(200 * sizeof (char));
+	char *outputFileName;
+	if(safeMalloc(&outputFileName, 200, sizeof (char))){
+		eprintf("Failed to allocate memory for the output file name");
+	}
 	outputFileName[0] = '\0';
 	int separateFiles = 0, accelerate = 0;
-	int xSize, dxSize, ySize, dySize, deltaSize, phiSize, argcCounter, particleCount = 1, iterationCount = ITER;
+	int argcCounter, particleCount = 1, iterationCount = ITER;
+	int xSize, dxSize, ySize, dySize, deltaSize, phiSize;
 	Map x, dx, y, dy, delta, phi;
 	Map dev_x, dev_dx, dev_y, dev_dy, dev_delta, dev_phi;
 	DataArray dataArray;
@@ -245,7 +249,7 @@ int main(int argc, char **argv) {
 		scanf("%s", fileName);
 	}
 
-	// use the map file to gather the sizes of the 6 coefficients
+	// open the map file
 	iprintf("open file\n");
 	FILE *scanFileP = fopen(fileName, "r");
 	iprintf("check if file is NULL\n");
@@ -254,10 +258,14 @@ int main(int argc, char **argv) {
 	}
 	iprintf("Get map sizes\n");
 	char* line = (char*) malloc(200 * sizeof (char));
+	
+	// skip the particle properties, they aren't needed at this stage
 	do {
 		line = fgets(line, 200, scanFileP);
 	} while (!strstr(line, " A "));
 	free(line);
+	
+	// scan the maps for their sizes
 	scanMap(scanFileP, &xSize);
 	scanMap(scanFileP, &dxSize);
 	scanMap(scanFileP, &ySize);
@@ -266,6 +274,8 @@ int main(int argc, char **argv) {
 	scanMap(scanFileP, &phiSize);
 	fclose(scanFileP);
 	iprintf("map sizes: %d %d %d %d %d %d\n", xSize, dxSize, ySize, dySize, deltaSize, phiSize);
+	
+	//TODO scan the spin maps for their sizes
 
 	// allocate memory for the map
 	iprintf("malloc map x\n");
@@ -428,7 +438,9 @@ int main(int argc, char **argv) {
 	iprintf("free data array\n");
 	freeDataArray(&dataArray, particleCount);
 	cudaFreeDataArray(&dev_dataArray, particleCount);
-	free(outputFileName);
+	if(safeFree(&outputFileName)){
+		wprintf("failed to free the variable containing the output file name");
+	}
 	iprintf("Output is created. Press Enter to continue...\n");
 	getchar();
 	if (strncmp(inputFileName, "\0", 1) == 0) {

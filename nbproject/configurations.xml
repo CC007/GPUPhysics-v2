@@ -16,6 +16,7 @@
         <itemPath>include/safemem.cuh</itemPath>
         <itemPath>include/safemem.h</itemPath>
         <itemPath>include/safememstates.h</itemPath>
+        <itemPath>include/spinmap.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -45,6 +46,7 @@
           <itemPath>src/cc/map.c</itemPath>
           <itemPath>src/cc/properties.c</itemPath>
           <itemPath>src/cc/safemem.c</itemPath>
+          <itemPath>src/cc/spinmap.c</itemPath>
         </logicalFolder>
         <logicalFolder name="cu" displayName="cu" projectFiles="true">
           <itemPath>src/cu/data.cu</itemPath>
@@ -132,6 +134,8 @@
       </item>
       <item path="include/safememstates.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/spinmap.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
       </item>
       <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
@@ -155,6 +159,8 @@
       <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cc/safemem.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cc/spinmap.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
       </item>
@@ -233,6 +239,8 @@
       </item>
       <item path="include/safememstates.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/spinmap.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
       </item>
       <item path="recources/map/Test1.dat" ex="false" tool="3" flavor2="0">
@@ -256,6 +264,8 @@
       <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cc/safemem.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/cc/spinmap.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
       </item>
