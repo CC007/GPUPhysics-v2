@@ -99,7 +99,7 @@ void cudaMemcpyDataArray(DataArray destinationDataArray, DataArray sourceDataArr
 		memcpyFailed += safeCudaMemcpyDtH(destinationDataArray->phi, hostHelperDataArray->phi, hostHelperDataArray->length, sizeof (double));
 	} else if (kind == cudaMemcpyHostToDevice) {
 		if (safeCudaMemcpyDtH(hostHelperDataArray, destinationDataArray, 1, sizeof (struct _DataArray))) {
-			eprintf("The data array could not be copied (source data array pointers couldn't be accessed)");
+			eprintf("The data array could not be copied (destination data array pointers couldn't be accessed)");
 		}
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->x, sourceDataArray->x, hostHelperDataArray->length, sizeof (double));
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->dx, sourceDataArray->dx, hostHelperDataArray->length, sizeof (double));
@@ -126,7 +126,7 @@ void cudaMemcpyFirstDataArray(DataArray destinationDataArray, DataArray sourceDa
 	int memcpyFailed = 0;
 	for (int i = 0; i < particleCount; i++) {
 		if (safeCudaMemcpyDtH(hostHelperDataArray, &(destinationDataArray[i]), 1, sizeof (struct _DataArray))) {
-			eprintf("The data array could not be copied (source map pointers couldn't be accessed)\n");
+			eprintf("The data array could not be copied (destination map pointers couldn't be accessed)\n");
 		}
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->x, sourceDataArray[i].x, 1, sizeof (double));
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->dx, sourceDataArray[i].dx, 1, sizeof (double));
@@ -168,7 +168,7 @@ void cudaMallocSpinDataArray(SpinDataArray *spinDataArray, int iterationCount, i
 			eprintf("The spin data array's contents could not be allocated (at particle %d)\n", i);
 		}
 		if (safeCudaMemcpyHtD(devHelperDataArray, hostHelperDataArray, particleCount, sizeof (struct _SpinDataArray))) {
-			eprintf("The spin data array's contents could not be made available in device memory (temporary host data array memcpy failed)\n");
+			eprintf("The spin data array's contents could not be made available in device memory (temporary host spin data array memcpy failed)\n");
 		}
 		if (safeFree((void**) &hostHelperDataArray)) {
 			wprintf("The temporary host spin data array's contents could not be freed\n");
@@ -188,7 +188,7 @@ void cudaFreeSpinDataArray(SpinDataArray *spinDataArray, int particleCount) {
 	if (hostHelperDataArray->length > 0) {
 		for (int i = 0; i < particleCount && !freeFailed; i++) {
 			if (safeCudaMemcpyDtH(hostHelperDataArray, &(devHelperDataArray[i]), 1, sizeof (struct _SpinDataArray))) {
-				wprintf("The spin data array could not be freed (temporary host data array memcpy failed)\n");
+				wprintf("The spin data array could not be freed (temporary host spin data array memcpy failed)\n");
 				return;
 			}
 			freeFailed += safeCudaFree((void**) &(hostHelperDataArray->sx));
@@ -215,14 +215,14 @@ void cudaMemcpySpinDataArray(SpinDataArray destinationSpinDataArray, SpinDataArr
 	int memcpyFailed = 0;
 	if (kind == cudaMemcpyDeviceToHost) {
 		if (safeCudaMemcpyDtH(hostHelperDataArray, sourceSpinDataArray, 1, sizeof (struct _SpinDataArray))) {
-			eprintf("The spin data array could not be copied (source data array pointers couldn't be accessed)\n");
+			eprintf("The spin data array could not be copied (source spin data array pointers couldn't be accessed)\n");
 		}
 		memcpyFailed += safeCudaMemcpyDtH(destinationSpinDataArray->sx, hostHelperDataArray->sx, hostHelperDataArray->length, sizeof (double));
 		memcpyFailed += safeCudaMemcpyDtH(destinationSpinDataArray->sy, hostHelperDataArray->sy, hostHelperDataArray->length, sizeof (double));
 		memcpyFailed += safeCudaMemcpyDtH(destinationSpinDataArray->sz, hostHelperDataArray->sz, hostHelperDataArray->length, sizeof (double));
 	} else if (kind == cudaMemcpyHostToDevice) {
 		if (safeCudaMemcpyDtH(hostHelperDataArray, destinationSpinDataArray, 1, sizeof (struct _SpinDataArray))) {
-			eprintf("The spin data array could not be copied (source data array pointers couldn't be accessed)");
+			eprintf("The spin data array could not be copied (destination spin data array pointers couldn't be accessed)");
 		}
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->sx, sourceSpinDataArray->sx, hostHelperDataArray->length, sizeof (double));
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->sy, sourceSpinDataArray->sy, hostHelperDataArray->length, sizeof (double));
@@ -246,7 +246,7 @@ void cudaMemcpyFirstSpinDataArray(SpinDataArray destinationSpinDataArray, SpinDa
 	int memcpyFailed = 0;
 	for (int i = 0; i < particleCount; i++) {
 		if (safeCudaMemcpyDtH(hostHelperDataArray, &(destinationSpinDataArray[i]), 1, sizeof (struct _SpinDataArray))) {
-			eprintf("The data array could not be copied (source map pointers couldn't be accessed)\n");
+			eprintf("The spin data array could not be copied (destination spin data array pointers couldn't be accessed)\n");
 		}
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->sx, sourceSpinDataArray[i].sx, 1, sizeof (double));
 		memcpyFailed += safeCudaMemcpyHtD(hostHelperDataArray->sy, sourceSpinDataArray[i].sy, 1, sizeof (double));
