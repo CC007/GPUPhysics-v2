@@ -500,14 +500,14 @@ int main(int argc, char **argv) {
 		cudaMemcpyMap(dev_phi, phi, cudaMemcpyHostToDevice);
 		cudaMemcpyFirstDataArray(dev_dataArray, dataArray, particleCount);
 		if (calcSpin) {
-			//cudaMemcpySpinMap(dev_spin, spin, cudaMemcpyHostToDevice);
+			cudaMemcpySpinMap(dev_spin, spin, cudaMemcpyHostToDevice);
 			cudaMemcpyFirstSpinDataArray(dev_spinDataArray, spinDataArray, particleCount);
 		}
 
 		cudaEventRecord(stopH2D);
 
 		if (calcSpin) {
-			//cudaSpinKernel<<<dimBlocks, dimThreads>>>(dev_dataArray, dev_spinDataArray, dev_x, dev_dx, dev_y, dev_dy, dev_delta, dev_phi, dev_spin, particleCount, iterationCount);
+			cudaSpinKernel<<<dimBlocks, dimThreads>>>(dev_dataArray, dev_spinDataArray, dev_x, dev_dx, dev_y, dev_dy, dev_delta, dev_phi, dev_spin, particleCount, iterationCount);
 		} else {
 			cudaKernel << <dimBlocks, dimThreads>>>(dev_dataArray, dev_x, dev_dx, dev_y, dev_dy, dev_delta, dev_phi, particleCount, iterationCount);
 		}
