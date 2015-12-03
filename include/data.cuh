@@ -11,9 +11,18 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
+#ifdef	__cplusplus
+
 void cudaMemcpyDataArray(DataArray destinationDataArray, DataArray sourceDataArray, cudaMemcpyKind kind);
 
 void cudaMemcpyFirstDataArray(DataArray destinationDataArray, DataArray sourceDataArray, int particleCount);
+
+
+void cudaMemcpySpinDataArray(SpinDataArray destinationSpinDataArray, SpinDataArray sourceSpinDataArray, cudaMemcpyKind kind);
+
+void cudaMemcpyFirstSpinDataArray(SpinDataArray destinationSpinDataArray, SpinDataArray sourceSpinDataArray, int particleCount);
+
+#endif  /* __cplusplus */
 
 #endif	/* DATA_CUH */
 

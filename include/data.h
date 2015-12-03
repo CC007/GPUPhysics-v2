@@ -22,6 +22,13 @@ extern "C" {
 		double *phi;
 	} *DataArray;
 
+	typedef struct _SpinDataArray {
+		int length;
+		double *sx;
+		double *sy;
+		double *sz;
+	} *SpinDataArray;
+
 	void mallocDataArray(DataArray *dataArray, int iterationCount, int particleCount);
 
 	void freeDataArray(DataArray *dataArray, int particleCount);
@@ -29,6 +36,15 @@ extern "C" {
 	void cudaMallocDataArray(DataArray *dataArray, int iterationCount, int particleCount);
 
 	void cudaFreeDataArray(DataArray *dataArray, int particleCount);
+	
+	
+	void mallocSpinDataArray(SpinDataArray *dataArray, int iterationCount, int particleCount);
+
+	void freeSpinDataArray(SpinDataArray *dataArray, int particleCount);
+
+	void cudaMallocSpinDataArray(SpinDataArray *dataArray, int iterationCount, int particleCount);
+
+	void cudaFreeSpinDataArray(SpinDataArray *dataArray, int particleCount);
 
 
 #ifdef	__cplusplus

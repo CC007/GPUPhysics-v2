@@ -16,6 +16,7 @@
         <itemPath>include/safemem.cuh</itemPath>
         <itemPath>include/safemem.h</itemPath>
         <itemPath>include/safememstates.h</itemPath>
+        <itemPath>include/spinmap.cuh</itemPath>
         <itemPath>include/spinmap.h</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -39,7 +40,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="src" displayName="src" projectFiles="true">
-        <logicalFolder name="cc" displayName="cc" projectFiles="true">
+        <logicalFolder name="cc" displayName="c" projectFiles="true">
           <itemPath>src/cc/data.c</itemPath>
           <itemPath>src/cc/extendedio.c</itemPath>
           <itemPath>src/cc/kernel.c</itemPath>
@@ -54,6 +55,7 @@
           <itemPath>src/cu/map.cu</itemPath>
           <itemPath>src/cu/physicsSimulation.cu</itemPath>
           <itemPath>src/cu/safemem.cu</itemPath>
+          <itemPath>src/cu/spinmap.cu</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -78,7 +80,7 @@
   <confs>
     <conf name="CUDA-Toolkit" type="1">
       <toolsSet>
-        <compilerSet>GNU+CUDA|GNU+CUDA</compilerSet>
+        <compilerSet>default</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
@@ -134,6 +136,8 @@
       </item>
       <item path="include/safememstates.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/spinmap.cuh" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/spinmap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
@@ -171,6 +175,8 @@
       <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/safemem.cu" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/cu/spinmap.cu" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
     <conf name="CUDA-SDK" type="1">
@@ -239,6 +245,8 @@
       </item>
       <item path="include/safememstates.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/spinmap.cuh" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/spinmap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="recources/input/test.input" ex="false" tool="3" flavor2="0">
@@ -276,6 +284,8 @@
       <item path="src/cu/physicsSimulation.cu" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/safemem.cu" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/cu/spinmap.cu" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

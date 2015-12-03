@@ -8,6 +8,8 @@
 #ifndef SPINMAP_H
 #define	SPINMAP_H
 
+#include "map.h"
+
 #ifdef	__cplusplus
 extern "C" {
 #endif
