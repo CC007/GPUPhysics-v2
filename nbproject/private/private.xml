@@ -7,25 +7,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cc/map.c</file>
             <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/data.cu</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/safemem.cu</file>
             <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/kernel.cu</file>
             <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/physicsSimulation.cu</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/spinmap.h</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/map.h</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cc/data.c</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/map.cuh</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/kernel.cuh</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/spinmap.cu</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/spinmap.cuh</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cc/spinmap.c</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/data.h</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/kernel.h</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/safemem.cu</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/map.cu</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/data.cuh</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/include/safemem.cuh</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cc/kernel.c</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/resources/map/mapsy7.dat</file>
         </group>
     </open-files>
 </project-private>

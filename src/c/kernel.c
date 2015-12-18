@@ -40,7 +40,7 @@ double sumArray(double *nums, int length) {
 void calcData(DataArray dataArray, int iteration, Map map, double *newValue) {
 	double *nums;
 	if (safeCalloc((void**) &nums, map->length, sizeof (double))) {
-		eprintf("Unable to to calculate iteration %d (local variable for the calculation could not be allocated", iteration);
+		eprintf("Unable to to calculate iteration %d (local variable for the calculation could not be allocated)\n", iteration);
 	}
 
 	for (int i = 0; i < map->length; i++) {
@@ -68,12 +68,12 @@ void calcSpinRow(DataArray dataArray, int iteration, InnerSpinMap innerSpinMap, 
 void calcSpin(DataArray dataArray, SpinDataArray spinDataArray, int iteration, SpinMap spinMap) {
 	double **matrix;
 	if (safeCalloc((void**) &matrix, 3, sizeof (double*))) {
-		eprintf("Unable to create matrix for spin calculation (outer array)", iteration);
+		eprintf("Unable to create matrix for spin calculation (outer array)\n", iteration);
 	}
 	int i;
 	for (i = 0; i < 3; i++) {
 		if (safeCalloc((void**) &(matrix[i]), 3, sizeof (double*))) {
-			eprintf("Unable to create matrix for spin calculation (inner array)", iteration);
+			eprintf("Unable to create matrix for spin calculation (inner array)\n", iteration);
 		}
 	}
 	calcSpinRow(dataArray, iteration, spinMap->x, matrix[0]);
@@ -91,12 +91,12 @@ void calcSpin(DataArray dataArray, SpinDataArray spinDataArray, int iteration, S
 
 	for (i = 0; i < 3; i++) {
 		if (safeFree((void**) &(matrix[i]))) {
-			wprintf("Unable to free the matrix (inner array)");
+			wprintf("Unable to free the matrix (inner array)\n");
 		}
 
 	}
 	if (safeFree((void**) &matrix)) {
-		wprintf("Unable to free the matrix (outer array)");
+		wprintf("Unable to free the matrix (outer array)\n");
 	}
 }
 

@@ -25,10 +25,12 @@
  */
 int safeCudaMalloc(void **pp, int elemCount, int elemSize) {
     void *p;
-    if (cudaMalloc(&p, elemCount * elemSize) != cudaSuccess) {
-        wprintf("The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
-        return ALLOC_FAILURE;
-    }
+	for(int i = 0; cudaMalloc(&p, elemCount * elemSize) != cudaSuccess; i++){
+		if(i > 100){
+			wprintf("The required space could not be allocated after %d attempts.\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", i, elemCount, elemSize, elemCount * elemSize);
+			return ALLOC_FAILURE;
+		}
+	}
     *pp = p;
     return ALLOC_SUCCESS;
 }
@@ -216,13 +218,15 @@ int safeCudaMemcpyDtD(void *destination, const void *source, int elemCount, int 
  *    ALLOC_FAILURE - the memory allocation was unsuccessful
  */
 __device__ int safeDeviceMalloc(void **pp, int elemCount, int elemSize) {
-    void *p;
+    void *p = NULL;
 
-    p = malloc(elemCount * elemSize);
-    if (p == NULL) {
-        printf("The required space could not be allocated\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", elemCount, elemSize, elemCount * elemSize);
-        return ALLOC_FAILURE;
-    }
+	for(int i = 0; p == NULL; i++){
+		if(i > 100){
+			printf("The required space could not be allocated after %d attempts.\n Element count: %d\n Element size: %d\n Total size: %d bytes\n", i, elemCount, elemSize, elemCount * elemSize);
+			return ALLOC_FAILURE;
+		}
+		p = malloc(elemCount * elemSize);
+	}
     *pp = p;
     return ALLOC_SUCCESS;
 }

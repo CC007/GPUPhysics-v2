@@ -42,24 +42,28 @@ __device__ void cudaCalcData(DataArray dataArray, int iteration, Map map, double
 	double *nums;
 	//nums = (double*) malloc(map->length * sizeof (double));
 	//memset(nums, 0, map->length * sizeof (double));
-	if (safeDeviceCalloc((void**) &nums, map->length, sizeof (double))) {
-		printf("Unable to to calculate iteration %d (local variable for the calculation could not be allocated", iteration);
-	}
+	if (map->length > 0) {
+		if (safeDeviceCalloc((void**) &nums, map->length, sizeof (double))) {
+			printf("Unable to to calculate iteration %d (local variable for the calculation could not be allocated).\n", iteration);
+		}
 
-	for (int i = 0; i < map->length; i++) {
-		nums[i] = map->A[i]
-				* pow(dataArray->x[iteration], (double) map->x[i])
-				* pow(dataArray->dx[iteration], (double) map->dx[i])
-				* pow(dataArray->y[iteration], (double) map->y[i])
-				* pow(dataArray->dy[iteration], (double) map->dy[i])
-				* pow(dataArray->delta[iteration], (double) map->delta[i])
-				* pow(dataArray->phi[iteration], (double) map->phi[i]);
-	}
+		for (int i = 0; i < map->length; i++) {
+			nums[i] = map->A[i]
+					* pow(dataArray->x[iteration], (double) map->x[i])
+					* pow(dataArray->dx[iteration], (double) map->dx[i])
+					* pow(dataArray->y[iteration], (double) map->y[i])
+					* pow(dataArray->dy[iteration], (double) map->dy[i])
+					* pow(dataArray->delta[iteration], (double) map->delta[i])
+					* pow(dataArray->phi[iteration], (double) map->phi[i]);
+		}
 
-	*newValue = cudaSumArray(nums, map->length);
-	//free(nums);
-	if(safeDeviceFree((void**) &nums)){
-		printf("Unable to free memory for local variable during calculation of iteration %d", iteration);
+		*newValue = cudaSumArray(nums, map->length);
+		//free(nums);
+		if (safeDeviceFree((void**) &nums)) {
+			printf("Unable to free memory for local variable during calculation of iteration %d\n", iteration);
+		}
+	} else {
+		*newValue = 0.0;
 	}
 }
 
@@ -72,22 +76,22 @@ __device__ void cudaCalcSpinRow(DataArray dataArray, int iteration, InnerSpinMap
 __device__ void cudaCalcSpin(DataArray dataArray, SpinDataArray spinDataArray, int iteration, SpinMap spinMap) {
 	double **matrix;
 	if (safeDeviceCalloc((void**) &matrix, 3, sizeof (double*))) {
-		printf("Unable to create matrix for spin calculation (outer array)", iteration);
+		printf("Unable to create matrix for spin calculation (outer array)\n", iteration);
 	}
 	int i;
 	for (i = 0; i < 3; i++) {
 		if (safeDeviceCalloc((void**) &(matrix[i]), 3, sizeof (double*))) {
-			printf("Unable to create matrix for spin calculation (inner array)", iteration);
+			printf("Unable to create matrix for spin calculation (inner array)\n", iteration);
 		}
 	}
 	cudaCalcSpinRow(dataArray, iteration, spinMap->x, matrix[0]);
 	cudaCalcSpinRow(dataArray, iteration, spinMap->y, matrix[1]);
 	cudaCalcSpinRow(dataArray, iteration, spinMap->z, matrix[2]);
-	
+
 	spinDataArray->sx[iteration + 1] = matrix[0][0] * spinDataArray->sx[iteration] + matrix[0][1] * spinDataArray->sy[iteration] + matrix[0][2] * spinDataArray->sz[iteration];
 	spinDataArray->sy[iteration + 1] = matrix[1][0] * spinDataArray->sx[iteration] + matrix[1][1] * spinDataArray->sy[iteration] + matrix[1][2] * spinDataArray->sz[iteration];
 	spinDataArray->sz[iteration + 1] = matrix[2][0] * spinDataArray->sx[iteration] + matrix[2][1] * spinDataArray->sy[iteration] + matrix[2][2] * spinDataArray->sz[iteration];
-	
+
 	// double divider = sqrt(spinDataArray->sx[iteration+1]^2 + spinDataArray->sy[iteration+1]^2 + spinDataArray->sz[iteration+1]^2)
 	// spinDataArray->sx[iteration+1] /= divider;
 	// spinDataArray->sy[iteration+1] /= divider;
@@ -95,12 +99,12 @@ __device__ void cudaCalcSpin(DataArray dataArray, SpinDataArray spinDataArray, i
 
 	for (i = 0; i < 3; i++) {
 		if (safeDeviceFree((void**) &(matrix[i]))) {
-			printf("Unable to free the matrix (inner array)");
+			printf("Unable to free the matrix (inner array)\n");
 		}
 
 	}
 	if (safeDeviceFree((void**) &matrix)) {
-		printf("Unable to free the matrix (outer array)");
+		printf("Unable to free the matrix (outer array)\n");
 	}
 }
 

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
+
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
@@ -17,11 +19,21 @@
 #include "../../include/extendedio.h"
 #include "../../include/safemem.h"
 
-#define ITER 4000
+#define ITER 100
+#define THREADS 8
+#define ORDER 3
 #define MIN(x, y) (x<y?x:y)
 
-void scanMap(FILE* fp, int *size) {
+static double timer() {
+	struct timeval tm;
+	gettimeofday(&tm, NULL);
+	return tm.tv_sec + tm.tv_usec / 1000000.0;
+}
+
+void scanMap(FILE* fp, int *size, int maxOrder) {
 	char* line = (char*) malloc(200 * sizeof (char));
+	int dum1, order, dum3, dum4, dum5, dum6, dum7, dum8;
+	double dum2;
 	line = fgets(line, 200, fp);
 	if (strncmp(line, "     I  COEFFICIENT            ORDER EXPONENTS", 46) != 0) {
 		if (strncmp(line, "     ALL COMPONENTS ZERO ", 25) != 0) {
@@ -30,15 +42,36 @@ void scanMap(FILE* fp, int *size) {
 			*size = 1;
 		}
 	} else {
-		for ((*size) = 0; !strstr((line = fgets(line, 200, fp)), "------"); (*size)++);
+		for ((*size) = 0; !strstr((line = fgets(line, 200, fp)), "------"); (*size)++) {
+
+			sscanf(line, "%d %lf %d %d %d %d %d %d %d",
+					&dum1,
+					&dum2,
+					&order,
+					&dum3,
+					&dum4,
+					&dum5,
+					&dum6,
+					&dum7,
+					&dum8
+					);
+			if (order > maxOrder) {
+				while (!strstr((line = fgets(line, 200, fp)), "------")) {
+					// skip higher order lines
+				}
+				break;
+			}
+		}
 	}
 	free(line);
 }
 
-void readMap(FILE *fp, Map map, int nr) {
+void readMap(FILE *fp, Map map, int nr, int maxOrder) {
 	char* line = (char*) malloc(200 * sizeof (char));
 	line = fgets(line, 200, fp);
-	int dum1, dum2;
+	int rowNr, order;
+	double A;
+	int x, dx, y, dy, delta, phi;
 	if (strncmp(line, "     I  COEFFICIENT            ORDER EXPONENTS", 46) != 0) {
 		if (strncmp(line, "     ALL COMPONENTS ZERO ", 25) != 0) {
 			eprintf("Corrupt line in file: %s", line);
@@ -55,22 +88,39 @@ void readMap(FILE *fp, Map map, int nr) {
 	for (int i = 0; !strstr((line = fgets(line, 200, fp)), "------"); i++) {
 		//TODO read chars ipv ints
 		sscanf(line, "%d %lf %d %d %d %d %d %d %d",
-				&dum1,
-				&(map->A[i]),
-				&dum2,
-				&(map->x[i]),
-				&(map->dx[i]),
-				&(map->y[i]),
-				&(map->dy[i]),
-				&(map->delta[i]),
-				&(map->phi[i])
+				&rowNr,
+				&A,
+				&order,
+				&x,
+				&dx,
+				&y,
+				&dy,
+				&delta,
+				&phi
 				);
+		if (order > maxOrder) {
+			while (!strstr((line = fgets(line, 200, fp)), "------")) {
+				// skip higher order lines
+			}
+			break;
+		}
+		map->A[i] = A;
+		map->x[i] = x;
+		map->dx[i] = dx;
+		map->y[i] = y;
+		map->dy[i] = dy;
+		map->delta[i] = delta;
+		map->phi[i] = phi;
 	}
 	free(line);
 }
 
-void scanSpinMap(FILE* fp, int *size) {
+void scanSpinMap(FILE* fp, int *size, int maxOrder) {
 	char* line = (char*) malloc(200 * sizeof (char));
+	int exponents;
+	int x, dx, y, dy, delta, phi;
+	double dum1, dum2, dum3;
+
 	line = fgets(line, 200, fp);
 	if (strncmp(line, "     ALL COMPONENTS ZERO ", 25) != 0) {
 		eprintf("Corrupt line in file: \n found: \"%s\"\n expected: \"     ALL COMPONENTS ZERO \"", line);
@@ -86,21 +136,47 @@ void scanSpinMap(FILE* fp, int *size) {
 		eprintf("Corrupt line in file: %s", line);
 	}
 	for (int i = 0; i < 3; i++) {
-		for (size[i] = 0; !strstr((line = fgets(line, 200, fp)), "------"); size[i]++);
+		for (size[i] = 0; !strstr((line = fgets(line, 200, fp)), "------"); size[i]++) {
+
+			sscanf(line, "%lf %lf %lf %d",
+					&dum1,
+					&dum2,
+					&dum3,
+					&(exponents)
+					);
+			phi = exponents % 10;
+			exponents /= 10;
+			delta = exponents % 10;
+			exponents /= 10;
+			dy = exponents % 10;
+			exponents /= 10;
+			y = exponents % 10;
+			exponents /= 10;
+			dx = exponents % 10;
+			exponents /= 10;
+			x = exponents % 10;
+			if (x + dx + y + dy + delta + phi > maxOrder) {
+				while (!strstr((line = fgets(line, 200, fp)), "------")) {
+					// skip higher order lines
+				}
+				break;
+			}
+		}
 	}
 	free(line);
 }
 
-void readSpinMap(FILE *fp, InnerSpinMap innerSpinMap) {
+void readSpinMap(FILE *fp, InnerSpinMap innerSpinMap, int maxOrder) {
 	char* line = (char*) malloc(200 * sizeof (char));
 	int exponents;
 	int x, dx, y, dy, delta, phi;
+	double xA, yA, zA;
 	for (int i = 0; !strstr((line = fgets(line, 200, fp)), "------"); i++) {
 		//TODO read chars ipv ints
 		sscanf(line, "%lf %lf %lf %d",
-				&(innerSpinMap->x->A[i]),
-				&(innerSpinMap->y->A[i]),
-				&(innerSpinMap->z->A[i]),
+				&xA,
+				&yA,
+				&zA,
 				&(exponents)
 				);
 		phi = exponents % 10;
@@ -114,6 +190,14 @@ void readSpinMap(FILE *fp, InnerSpinMap innerSpinMap) {
 		dx = exponents % 10;
 		exponents /= 10;
 		x = exponents % 10;
+		if (x + dx + y + dy + delta + phi > maxOrder) {
+			while (!strstr((line = fgets(line, 200, fp)), "------")) {
+				// skip higher order lines
+			}
+			break;
+		}
+		
+		innerSpinMap->x->A[i] = xA;
 		innerSpinMap->x->x[i] = x;
 		innerSpinMap->x->dx[i] = dx;
 		innerSpinMap->x->y[i] = y;
@@ -121,6 +205,7 @@ void readSpinMap(FILE *fp, InnerSpinMap innerSpinMap) {
 		innerSpinMap->x->delta[i] = delta;
 		innerSpinMap->x->phi[i] = phi;
 
+		innerSpinMap->y->A[i] = yA;
 		innerSpinMap->y->x[i] = x;
 		innerSpinMap->y->dx[i] = dx;
 		innerSpinMap->y->y[i] = y;
@@ -128,6 +213,7 @@ void readSpinMap(FILE *fp, InnerSpinMap innerSpinMap) {
 		innerSpinMap->y->delta[i] = delta;
 		innerSpinMap->y->phi[i] = phi;
 
+		innerSpinMap->z->A[i] = zA;
 		innerSpinMap->z->x[i] = x;
 		innerSpinMap->z->dx[i] = dx;
 		innerSpinMap->z->y[i] = y;
@@ -250,7 +336,7 @@ int main(int argc, char **argv) {
 		eprintf("Failed to allocate memory for the output file name");
 	}
 	outputFileName[0] = '\0';
-	int separateFiles = 0, accelerate = 0, calcSpin = 0;
+	int separateFiles = 0, accelerate = 0, calcSpin = 0, threadCount = THREADS, polynomialOrder = ORDER;
 	int argcCounter, particleCount = 1, iterationCount = ITER;
 	int xSize, dxSize, ySize, dySize, deltaSize, phiSize;
 	int spinSize[3];
@@ -266,13 +352,16 @@ int main(int argc, char **argv) {
 
 	Properties properties;
 
-	float h2dTime = 0, kTime = 0, d2hTime;
-	cudaEvent_t start, stopH2D, stopK, stopD2H;
+	float cudah2dTime = 0, cudakTime = 0, cudaWriteTime = 0;
+	cudaEvent_t start, stopH2D, stopK, stopWrite;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stopH2D);
 	cudaEventCreate(&stopK);
-	cudaEventCreate(&stopD2H);
+	cudaEventCreate(&stopWrite);
 
+
+	double kTime = 0, writeTime = 0;
+	double startTime;
 
 	// Read the program arguments
 	argcCounter = argc;
@@ -293,6 +382,14 @@ int main(int argc, char **argv) {
 
 				case 'i':
 					sscanf(&argv[1][3], "%d", &iterationCount);
+					break;
+
+				case 't':
+					sscanf(&argv[1][3], "%d", &threadCount);
+					break;
+
+				case 'p':
+					sscanf(&argv[1][3], "%d", &polynomialOrder);
 					break;
 
 				default:
@@ -320,14 +417,16 @@ int main(int argc, char **argv) {
 				case 'h':
 					if (strstr(&argv[1][2], "help") || argv[1][2] == '\0') {
 						printf("Calculates a certain amount of steps of a charged particle in a inhomogeneous\nmagnetic field.\n\n");
-						printf("<executable> (-h|--help) | <executable> [-m=<mapFileName>] [-c=<coeffFileName>]\n[-o=<outputFileName> [-f]] [-gpu] [-i=<nr>] [-s]\n\n");
+						printf("<executable> (-h|--help) | <executable> [-m=<mapFileName>] [-c=<coeffFileName>]\n[-o=<outputFileName> [-f]] [-gpu [-t=<nr>]] [-i=<nr>] [-p=<nr>] [-s]\n\n");
 						printf("-h, --help\t\t Display help\n");
 						printf("-m=<mapFileName>\t Set the map file to be <mapFileName>. If not set, it\n\t\t\t will be asked for in the program itself.\n");
 						printf("-c=<coeffFileName>\t Set the coefficients file to be <coeffFileName>. If\n\t\t\t not set, it will be asked for in the program itself.\n\t\t\t Note that the coefficients file supports multiple\n\t\t\t particles, while if the program is run without this\n\t\t\t file, it supports only one particle.\n");
 						printf("-o=<outputFileName>\t Set the output file to be <outputFileName>. If not\n\t\t\t set, it will default to stdout\n");
 						printf("-f\t\t\t Choose if you want one output file or (if applicable)\n\t\t\t multiple output files. Note that this parameter can\n\t\t\t only be set if an output file is set.\n");
 						printf("-gpu\t\t\t Choose if you want to use GPU acceleration. You would\n\t\t\t need a NVIDIA videocard with compute capability 2.0\n\t\t\t or higher (Fermi microarchitecture).\n");
-						printf("-i=<nr>\t\t\t Set the number of iterations to <nr>. If not set, it\n\t\t\t will default to 4000.\n");
+						printf("-t=<nr>\t\t\t Set the number of threads used in the calculation to <nr>.\n\t\t\t If not set, it will default to 8.\n");
+						printf("-p=<nr>\t\t\t Set the highest order used in the calculation to <nr>.\n\t\t\t If not set, it will default to 3.\n");
+						printf("-i=<nr>\t\t\t Set the number of iterations to <nr>. If not set, it\n\t\t\t will default to 100.\n");
 						printf("-s\t\t\t Choose if you want the spin to be calculated as well.\n\t\t\t At the moment no cpu support\n\n");
 						printf("Press Enter to continue...\n");
 						getchar();
@@ -371,20 +470,20 @@ int main(int argc, char **argv) {
 
 	// scan the maps for their sizes
 	iprintf(" x\n");
-	scanMap(scanFileP, &xSize);
+	scanMap(scanFileP, &xSize, polynomialOrder);
 	iprintf(" dx\n");
-	scanMap(scanFileP, &dxSize);
+	scanMap(scanFileP, &dxSize, polynomialOrder);
 	iprintf(" y\n");
-	scanMap(scanFileP, &ySize);
+	scanMap(scanFileP, &ySize, polynomialOrder);
 	iprintf(" dy\n");
-	scanMap(scanFileP, &dySize);
+	scanMap(scanFileP, &dySize, polynomialOrder);
 	iprintf(" delta\n");
-	scanMap(scanFileP, &deltaSize);
+	scanMap(scanFileP, &deltaSize, polynomialOrder);
 	iprintf(" phi\n");
-	scanMap(scanFileP, &phiSize);
+	scanMap(scanFileP, &phiSize, polynomialOrder);
 	if (calcSpin) {
 		iprintf(" spin\n");
-		scanSpinMap(scanFileP, spinSize);
+		scanSpinMap(scanFileP, spinSize, polynomialOrder);
 	}
 	fclose(scanFileP);
 	iprintf("map sizes: %d %d %d %d %d %d\n", xSize, dxSize, ySize, dySize, deltaSize, phiSize);
@@ -427,24 +526,24 @@ int main(int argc, char **argv) {
 	iprintf("read properties\n");
 	readProperties(mapFileP, &properties);
 	iprintf("read map x\n");
-	readMap(mapFileP, x, 0);
+	readMap(mapFileP, x, 0, polynomialOrder);
 	iprintf("read map dx\n");
-	readMap(mapFileP, dx, 1);
+	readMap(mapFileP, dx, 1, polynomialOrder);
 	iprintf("read map y\n");
-	readMap(mapFileP, y, 2);
+	readMap(mapFileP, y, 2, polynomialOrder);
 	iprintf("read map dy\n");
-	readMap(mapFileP, dy, 3);
+	readMap(mapFileP, dy, 3, polynomialOrder);
 	iprintf("read map delta\n");
-	readMap(mapFileP, delta, 4);
+	readMap(mapFileP, delta, 4, polynomialOrder);
 	iprintf("read map phi\n");
-	readMap(mapFileP, phi, 5);
+	readMap(mapFileP, phi, 5, polynomialOrder);
 	if (calcSpin) {
 		for (int i = 0; i < 4; i++) fgets(dummy, 200, mapFileP);
 		free(dummy);
 		iprintf("read spin maps");
-		readSpinMap(mapFileP, spin->x);
-		readSpinMap(mapFileP, spin->y);
-		readSpinMap(mapFileP, spin->z);
+		readSpinMap(mapFileP, spin->x, polynomialOrder);
+		readSpinMap(mapFileP, spin->y, polynomialOrder);
+		readSpinMap(mapFileP, spin->z, polynomialOrder);
 	}
 	fclose(mapFileP);
 
@@ -474,6 +573,8 @@ int main(int argc, char **argv) {
 		iprintf("Particle count: %d\n", particleCount);
 	}
 
+	startTime = timer();
+
 	// calculate the coefficients for 4000 iterations
 	if (!accelerate) {
 		//cpu
@@ -487,11 +588,13 @@ int main(int argc, char **argv) {
 		cudaEventRecord(start);
 		cudaDeviceProp deviceProperties;
 		cudaGetDeviceProperties(&deviceProperties, 0);
-		int blocks = MIN(1048576, particleCount);
+		int blocks = MIN(65535, particleCount / threadCount + 1);
 		iprintf("Device name: %s\n", deviceProperties.name);
 		iprintf("Used blocks: %d\n", blocks);
-		int dimBlocks = sqrt((float) blocks);
-		int dimThreads = blocks / dimBlocks + (blocks % dimBlocks > 0);
+		//int dimBlocks = sqrt((float) blocks);
+		//int dimThreads = blocks / dimBlocks + (blocks % dimBlocks > 0);
+		int dimBlocks = blocks;
+		int dimThreads = threadCount;
 		cudaMemcpyMap(dev_x, x, cudaMemcpyHostToDevice);
 		cudaMemcpyMap(dev_dx, dx, cudaMemcpyHostToDevice);
 		cudaMemcpyMap(dev_y, y, cudaMemcpyHostToDevice);
@@ -507,14 +610,19 @@ int main(int argc, char **argv) {
 		cudaEventRecord(stopH2D);
 
 		if (calcSpin) {
-			cudaSpinKernel<<<dimBlocks, dimThreads>>>(dev_dataArray, dev_spinDataArray, dev_x, dev_dx, dev_y, dev_dy, dev_delta, dev_phi, dev_spin, particleCount, iterationCount);
+			cudaSpinKernel << <dimBlocks, dimThreads>>>(dev_dataArray, dev_spinDataArray, dev_x, dev_dx, dev_y, dev_dy, dev_delta, dev_phi, dev_spin, particleCount, iterationCount);
 		} else {
-			cudaKernel<<<dimBlocks, dimThreads>>>(dev_dataArray, dev_x, dev_dx, dev_y, dev_dy, dev_delta, dev_phi, particleCount, iterationCount);
+			cudaKernel << <dimBlocks, dimThreads>>>(dev_dataArray, dev_x, dev_dx, dev_y, dev_dy, dev_delta, dev_phi, particleCount, iterationCount);
 		}
 
 
+	}
+	cudaDeviceSynchronize();
+	if (accelerate) {
 		cudaEventRecord(stopK);
 	}
+	kTime = timer() - startTime;
+	iprintf("Done calculating. Writing output to file(s)\n\n");
 	for (int n = 0; n < particleCount; n++) {
 		// if acceleration is on, copy input from device to host
 		if (accelerate) {
@@ -561,17 +669,18 @@ int main(int argc, char **argv) {
 			fclose(outputFile);
 		}
 	}
-	cudaEventRecord(stopD2H);
-	cudaEventSynchronize(stopD2H);
-	cudaEventElapsedTime(&h2dTime, start, stopH2D);
-	cudaEventElapsedTime(&kTime, stopH2D, stopK);
-	cudaEventElapsedTime(&d2hTime, stopK, stopD2H);
+	cudaEventRecord(stopWrite);
+	writeTime = timer() - startTime - kTime;
+	cudaEventSynchronize(stopWrite);
+	cudaEventElapsedTime(&cudah2dTime, start, stopH2D);
+	cudaEventElapsedTime(&cudakTime, stopH2D, stopK);
+	cudaEventElapsedTime(&cudaWriteTime, stopK, stopWrite);
 
-
+	iprintf("Done writing to file(s)\n");
 	iprintf("Elapsed time:\n\n");
-	iprintf(" H2D:    %f\n", h2dTime);
-	iprintf(" Kernel: %f\n", kTime);
-	iprintf(" D2H:    %f\n", d2hTime);
+	iprintf(" H2D:    %7.6fs\n", cudah2dTime / 1000);
+	iprintf(" Kernel: %7.6fs/%7.6fs\n", cudakTime / 1000, kTime);
+	iprintf(" D2H:    %7.6fs/%7.6fs\n", cudaWriteTime / 1000, writeTime);
 
 	// clean up the heap and tell that the computation is finished
 	iprintf("free map x\n");

@@ -1,50 +1,59 @@
-CC=gcc
-CUARCH=sm_20
-CCDEBUG=
-CUDEBUG=
-OPT=O3
-CU=/usr/local/cuda-6.5/bin/nvcc -arch=$(CUARCH)
-CCFLAGS=-c -Wall -$(OPT)
-CUFLAGS=-dc -$(OPT)
+NVCC = /usr/local/cuda/bin/nvcc
+NVCCFLAGS = -x cu --std=c++11 -arch=sm_20 -rdc=true -g
 
-CCSRC=
-CUSRC=oldkernel.cu
-CCSRCDIR=src/cc
-CUSRCDIR=src/cu
+GCC = gcc
+GCCFLAGS = -Wall --std=c99 -g
 
-CCOBJDIR=obj_cc
-CUOBJDIR=obj_cu
+LINKFLAGS = --std=c++11 -arch=sm_20 -g
 
-CCOBJECTS=$(addprefix $(CCOBJDIR)/,$(CCSRC:.cpp=.o))
-CUOBJECTS=$(addprefix $(CUOBJDIR)/,$(CUSRC:.cu=.o))
+EXE = simulation
 
-EXE=GPUPhysics-v2
-EXEDIR=bin
-all: $(EXE)
+BOLD = \\033[1m
+NORMAL = \\033[0m
+GREEN = \\033[1;32m
 
-nolink: $(CCOBJECTS) $(CUOBJECTS)
 
-$(EXE): $(CCOBJECTS) $(CUOBJECTS)
-	$(CU) $^ -o $(EXEDIR)/$(EXE)					# link final executable
+
+define n
+
+
+endef
+
+all: dist/$(EXE)
+
+dist/${EXE}: obj/cu obj/c dist .linking
 	
--include $(CCOBJECTS:.o=_cc.d)						# import generated dependencies
--include $(CUOBJECTS:.o=_cu.d)
+obj/c: obj
+	@printf "${GREEN} - make obj/c folder${NORMAL}\n"
+	mkdir -p obj/c
+
+obj/cu: obj
+	@printf "${GREEN} - make obj/cu folder${NORMAL}\n"
+	mkdir -p obj/cu
 	
-$(CCOBJDIR)/%.o: $(CCSRCDIR)/%.cpp | $(CCOBJDIR)
-	$(CC) $(CCFLAGS) $(CCDEBUG) $< -o $@					# compile C++ source-files
-	@$(CC) -MM $< > $(CCOBJDIR)/$*_cc.d				# generate dependencies
-	@sed -i '1s/^/$(CCOBJDIR)\//' $(CCOBJDIR)/$*_cc.d		# prepend object-dir to the target
+obj:
+	@printf "${GREEN} - make obj folder${NORMAL}\n"
+	mkdir -p obj
 	
-$(CUOBJDIR)/%.o: $(CUSRCDIR)/%.cu | $(CUOBJDIR)
-	$(CU) $(CUFLAGS) $(CUDEBUG) $< -o $@					# compile CUDA-C++ source-files
-	@$(CC) -x c++ -MM $< > $(CUOBJDIR)/$*_cu.d			# generate dependencies
-	@sed -i '1s/^/$(CUOBJDIR)\//' $(CUOBJDIR)/$*_cu.d		# prepend object-dir to the target
+dist:
+	@printf "${GREEN} - make dist folder${NORMAL}\n"
+	mkdir -p dist
+
+.linking: $(patsubst src%, obj%, $(patsubst %.cu, %.o, $(patsubst %.c, %.o,$(shell find src -type f))))
+	@printf "${GREEN} - link program from objects${NORMAL}\n"
+	$(NVCC) $(LINKFLAGS) $(patsubst src%, obj%, $(patsubst %.cu, %.o, $(patsubst %.c, %.o, $^))) -o dist/$(EXE)
+	@touch .linking
+
+obj/c/%.o: src/c/%.c
+	@printf "${GREEN} - create object from $<${NORMAL}\n"
+	$(GCC) -c $(GCCFLAGS) $< -o $@
 	
-$(CCOBJDIR):
-	@mkdir -p $@
-	
-$(CUOBJDIR):
-	@mkdir -p $@
-	
+obj/cu/%.o: src/cu/%.cu
+	@printf "${GREEN} - create object from $<${NORMAL}\n"
+	$(NVCC) -c $(NVCCFLAGS) $< -o $@
+
 clean:
-	rm -f $(CCOBJDIR)/*.o $(CUOBJDIR)/*.o $(CCOBJDIR)/*.d $(CUOBJDIR)/*.d
+	@printf "${GREEN} - remove the obj and dist folder${NORMAL}\n"
+	rm -r -f obj dist
+	
+rebuild: clean | dist/$(EXE)

@@ -8,6 +8,9 @@
 #ifndef SAFEMEM_CUH
 #define	SAFEMEM_CUH
 
+#include <cuda.h>
+#include <cuda_runtime.h>
+
 #include "safememstates.h"
 
 /* Allocate elemCount * elemSize bytes of device memory from a kernel
