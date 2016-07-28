@@ -92,7 +92,7 @@ __device__ void cudaCalcSpin(DataArray dataArray, SpinDataArray spinDataArray, i
 	spinDataArray->sy[iteration + 1] = matrix[1][0] * spinDataArray->sx[iteration] + matrix[1][1] * spinDataArray->sy[iteration] + matrix[1][2] * spinDataArray->sz[iteration];
 	spinDataArray->sz[iteration + 1] = matrix[2][0] * spinDataArray->sx[iteration] + matrix[2][1] * spinDataArray->sy[iteration] + matrix[2][2] * spinDataArray->sz[iteration];
 
-	double divider = sqrt(spinDataArray->sx[iteration+1]^2 + spinDataArray->sy[iteration+1]^2 + spinDataArray->sz[iteration+1]^2)
+	double divider = sqrt(spinDataArray->sx[iteration+1]^2 + spinDataArray->sy[iteration+1]^2 + spinDataArray->sz[iteration+1]^2);
 	spinDataArray->sx[iteration+1] /= divider;
 	spinDataArray->sy[iteration+1] /= divider;
 	spinDataArray->sz[iteration+1] /= divider;
