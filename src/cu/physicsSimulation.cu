@@ -196,7 +196,7 @@ void readSpinMap(FILE *fp, InnerSpinMap innerSpinMap, int maxOrder) {
 			}
 			break;
 		}
-		
+
 		innerSpinMap->x->A[i] = xA;
 		innerSpinMap->x->x[i] = x;
 		innerSpinMap->x->dx[i] = dx;
@@ -336,7 +336,7 @@ int main(int argc, char **argv) {
 		eprintf("Failed to allocate memory for the output file name");
 	}
 	outputFileName[0] = '\0';
-	int separateFiles = 0, accelerate = 0, calcSpin = 0, threadCount = THREADS, polynomialOrder = ORDER;
+	int separateFiles = 0, accelerate = 0, calcSpin = 0, binary = 0, threadCount = THREADS, polynomialOrder = ORDER;
 	int argcCounter, particleCount = 1, iterationCount = ITER;
 	int xSize, dxSize, ySize, dySize, deltaSize, phiSize;
 	int spinSize[3];
@@ -403,6 +403,9 @@ int main(int argc, char **argv) {
 				case 's':
 					calcSpin = 1;
 					break;
+				case 'b':
+					binary = 1;
+					break;
 				case 'g':
 					if (!strstr(&argv[1][2], "pu") || argv[1][4] != '\0') {
 						eprintf("Wrong Argument: %s\n", argv[1]);
@@ -427,7 +430,8 @@ int main(int argc, char **argv) {
 						printf("-t=<nr>\t\t\t Set the number of threads used in the calculation to <nr>.\n\t\t\t If not set, it will default to 8.\n");
 						printf("-p=<nr>\t\t\t Set the highest order used in the calculation to <nr>.\n\t\t\t If not set, it will default to 3.\n");
 						printf("-i=<nr>\t\t\t Set the number of iterations to <nr>. If not set, it\n\t\t\t will default to 100.\n");
-						printf("-s\t\t\t Choose if you want the spin to be calculated as well.\n\t\t\t At the moment no cpu support\n\n");
+						printf("-s\t\t\t Choose if you want the spin to be calculated as well.\n");
+						printf("-b\t\t\t Choose if you want the output to be written in binary\n\t\t\t in stead of as text.\n\n");
 						printf("Press Enter to continue...\n");
 						getchar();
 						exit(EXIT_SUCCESS);
@@ -655,13 +659,39 @@ int main(int argc, char **argv) {
 		} else {
 			outputFile = stdout;
 		}
-		if (calcSpin) {
-			for (int i = 0; i < iterationCount; i++) {
-				fprintf(outputFile, "%10.7f %10.7f %10.7f %10.7f %10.7f %10.7f %10.7f %10.7f %10.7f\n", dataArray[n].x[i], dataArray[n].dx[i], dataArray[n].y[i], dataArray[n].dy[i], dataArray[n].delta[i], dataArray[n].phi[i], spinDataArray[n].sx[i], spinDataArray[n].sy[i], spinDataArray[n].sz[i]);
+		if (binary) {
+			fprintf(outputFile, "#binary\n");
+			if (calcSpin) {
+				for (int i = 0; i < iterationCount; i++) {
+					printBinaryDouble(outputFile, dataArray[n].x[i]);
+					printBinaryDouble(outputFile, dataArray[n].dx[i]);
+					printBinaryDouble(outputFile, dataArray[n].y[i]);
+					printBinaryDouble(outputFile, dataArray[n].dy[i]);
+					printBinaryDouble(outputFile, dataArray[n].delta[i]);
+					printBinaryDouble(outputFile, dataArray[n].phi[i]);
+					printBinaryDouble(outputFile, spinDataArray[n].sx[i]);
+					printBinaryDouble(outputFile, spinDataArray[n].sy[i]);
+					printBinaryDouble(outputFile, spinDataArray[n].sz[i]);
+				}
+			} else {
+				for (int i = 0; i < iterationCount; i++) {
+					printBinaryDouble(outputFile, dataArray[n].x[i]);
+					printBinaryDouble(outputFile, dataArray[n].dx[i]);
+					printBinaryDouble(outputFile, dataArray[n].y[i]);
+					printBinaryDouble(outputFile, dataArray[n].dy[i]);
+					printBinaryDouble(outputFile, dataArray[n].delta[i]);
+					printBinaryDouble(outputFile, dataArray[n].phi[i]);
+				}
 			}
 		} else {
-			for (int i = 0; i < iterationCount; i++) {
-				fprintf(outputFile, "%10.7f %10.7f %10.7f %10.7f %10.7f %10.7f\n", dataArray[n].x[i], dataArray[n].dx[i], dataArray[n].y[i], dataArray[n].dy[i], dataArray[n].delta[i], dataArray[n].phi[i]);
+			if (calcSpin) {
+				for (int i = 0; i < iterationCount; i++) {
+					fprintf(outputFile, "%10.7f %10.7f %10.7f %10.7f %10.7f %10.7f %10.7f %10.7f %10.7f\n", dataArray[n].x[i], dataArray[n].dx[i], dataArray[n].y[i], dataArray[n].dy[i], dataArray[n].delta[i], dataArray[n].phi[i], spinDataArray[n].sx[i], spinDataArray[n].sy[i], spinDataArray[n].sz[i]);
+				}
+			} else {
+				for (int i = 0; i < iterationCount; i++) {
+					fprintf(outputFile, "%10.7f %10.7f %10.7f %10.7f %10.7f %10.7f\n", dataArray[n].x[i], dataArray[n].dx[i], dataArray[n].y[i], dataArray[n].dy[i], dataArray[n].delta[i], dataArray[n].phi[i]);
+				}
 			}
 		}
 		fprintf(outputFile, "\n");

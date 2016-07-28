@@ -79,15 +79,15 @@ void calcSpin(DataArray dataArray, SpinDataArray spinDataArray, int iteration, S
 	calcSpinRow(dataArray, iteration, spinMap->x, matrix[0]);
 	calcSpinRow(dataArray, iteration, spinMap->y, matrix[1]);
 	calcSpinRow(dataArray, iteration, spinMap->z, matrix[2]);
-	
+
 	spinDataArray->sx[iteration + 1] = matrix[0][0] * spinDataArray->sx[iteration] + matrix[0][1] * spinDataArray->sy[iteration] + matrix[0][2] * spinDataArray->sz[iteration];
 	spinDataArray->sy[iteration + 1] = matrix[1][0] * spinDataArray->sx[iteration] + matrix[1][1] * spinDataArray->sy[iteration] + matrix[1][2] * spinDataArray->sz[iteration];
 	spinDataArray->sz[iteration + 1] = matrix[2][0] * spinDataArray->sx[iteration] + matrix[2][1] * spinDataArray->sy[iteration] + matrix[2][2] * spinDataArray->sz[iteration];
-	
-	// double divider = sqrt(spinDataArray->sx[iteration+1]^2 + spinDataArray->sy[iteration+1]^2 + spinDataArray->sz[iteration+1]^2)
-	// spinDataArray->sx[iteration+1] /= divider;
-	// spinDataArray->sy[iteration+1] /= divider;
-	// spinDataArray->sz[iteration+1] /= divider;
+
+	double divider = sqrt(spinDataArray->sx[iteration+1]^2 + spinDataArray->sy[iteration+1]^2 + spinDataArray->sz[iteration+1]^2)
+	spinDataArray->sx[iteration+1] /= divider;
+	spinDataArray->sy[iteration+1] /= divider;
+	spinDataArray->sz[iteration+1] /= divider;
 
 	for (i = 0; i < 3; i++) {
 		if (safeFree((void**) &(matrix[i]))) {

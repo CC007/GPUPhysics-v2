@@ -14,15 +14,15 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=nvcc
-CCC=nvcc
-CXX=nvcc
-FC=gfortran
-AS=as
+CC=gcc
+CCC=g++
+CXX=g++
+FC=
+AS=
 
 # Macros
-CND_PLATFORM=GNU+CUDA-Linux-x86
-CND_DLIB_EXT=so
+CND_PLATFORM=mpiccc-Windows
+CND_DLIB_EXT=dll
 CND_CONF=CUDA-Toolkit
 CND_DISTDIR=dist
 CND_BUILDDIR=build
@@ -35,23 +35,27 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/src/cc/data.o \
-	${OBJECTDIR}/src/cc/map.o \
-	${OBJECTDIR}/src/cc/properties.o \
-	${OBJECTDIR}/src/cc/safemem.o \
+	${OBJECTDIR}/src/c/data.o \
+	${OBJECTDIR}/src/c/extendedio.o \
+	${OBJECTDIR}/src/c/kernel.o \
+	${OBJECTDIR}/src/c/map.o \
+	${OBJECTDIR}/src/c/properties.o \
+	${OBJECTDIR}/src/c/safemem.o \
+	${OBJECTDIR}/src/c/spinmap.o \
 	${OBJECTDIR}/src/cu/data.o \
+	${OBJECTDIR}/src/cu/kernel.o \
 	${OBJECTDIR}/src/cu/map.o \
-	${OBJECTDIR}/src/cu/oldkernel.o \
 	${OBJECTDIR}/src/cu/physicsSimulation.o \
-	${OBJECTDIR}/src/cu/safemem.o
+	${OBJECTDIR}/src/cu/safemem.o \
+	${OBJECTDIR}/src/cu/spinmap.o
 
 
 # C Compiler Flags
-CFLAGS=-m64
+CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-m64
-CXXFLAGS=-m64
+CCFLAGS=
+CXXFLAGS=
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -60,60 +64,67 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../../NVIDIA_GPU_Computing_SDK/C/lib -L../../NVIDIA_GPU_Computing_SDK/shared/lib -lcudart
+LDLIBSOPTIONS=../../NVIDIA_GPU_Computing_SDK/C/lib ../../NVIDIA_GPU_Computing_SDK/shared/lib cudart
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2.exe
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2 ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/src/cc/data.o: src/cc/data.c 
-	${MKDIR} -p ${OBJECTDIR}/src/cc
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/data.o src/cc/data.c
+${OBJECTDIR}/src/c/data.o: src/c/data.c 
+	${MKDIR} -p ${OBJECTDIR}/src/c
+	$(COMPILE.c) ${OBJECTDIR}/src/c/data.o src/c/data.c
 
-${OBJECTDIR}/src/cc/map.o: src/cc/map.c 
-	${MKDIR} -p ${OBJECTDIR}/src/cc
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/map.o src/cc/map.c
+${OBJECTDIR}/src/c/extendedio.o: src/c/extendedio.c 
+	${MKDIR} -p ${OBJECTDIR}/src/c
+	$(COMPILE.c) ${OBJECTDIR}/src/c/extendedio.o src/c/extendedio.c
 
-${OBJECTDIR}/src/cc/properties.o: src/cc/properties.c 
-	${MKDIR} -p ${OBJECTDIR}/src/cc
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/properties.o src/cc/properties.c
+${OBJECTDIR}/src/c/kernel.o: src/c/kernel.c 
+	${MKDIR} -p ${OBJECTDIR}/src/c
+	$(COMPILE.c) ${OBJECTDIR}/src/c/kernel.o src/c/kernel.c
 
-${OBJECTDIR}/src/cc/safemem.o: src/cc/safemem.c 
-	${MKDIR} -p ${OBJECTDIR}/src/cc
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cc/safemem.o src/cc/safemem.c
+${OBJECTDIR}/src/c/map.o: src/c/map.c 
+	${MKDIR} -p ${OBJECTDIR}/src/c
+	$(COMPILE.c) ${OBJECTDIR}/src/c/map.o src/c/map.c
+
+${OBJECTDIR}/src/c/properties.o: src/c/properties.c 
+	${MKDIR} -p ${OBJECTDIR}/src/c
+	$(COMPILE.c) ${OBJECTDIR}/src/c/properties.o src/c/properties.c
+
+${OBJECTDIR}/src/c/safemem.o: src/c/safemem.c 
+	${MKDIR} -p ${OBJECTDIR}/src/c
+	$(COMPILE.c) ${OBJECTDIR}/src/c/safemem.o src/c/safemem.c
+
+${OBJECTDIR}/src/c/spinmap.o: src/c/spinmap.c 
+	${MKDIR} -p ${OBJECTDIR}/src/c
+	$(COMPILE.c) ${OBJECTDIR}/src/c/spinmap.o src/c/spinmap.c
 
 ${OBJECTDIR}/src/cu/data.o: src/cu/data.cu 
 	${MKDIR} -p ${OBJECTDIR}/src/cu
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/data.o src/cu/data.cu
+	$(COMPILE.cc) ${OBJECTDIR}/src/cu/data.o src/cu/data.cu
+
+${OBJECTDIR}/src/cu/kernel.o: src/cu/kernel.cu 
+	${MKDIR} -p ${OBJECTDIR}/src/cu
+	$(COMPILE.c) ${OBJECTDIR}/src/cu/kernel.o src/cu/kernel.cu
 
 ${OBJECTDIR}/src/cu/map.o: src/cu/map.cu 
 	${MKDIR} -p ${OBJECTDIR}/src/cu
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/map.o src/cu/map.cu
-
-${OBJECTDIR}/src/cu/oldkernel.o: src/cu/oldkernel.cu 
-	${MKDIR} -p ${OBJECTDIR}/src/cu
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/oldkernel.o src/cu/oldkernel.cu
+	$(COMPILE.cc) ${OBJECTDIR}/src/cu/map.o src/cu/map.cu
 
 ${OBJECTDIR}/src/cu/physicsSimulation.o: src/cu/physicsSimulation.cu 
 	${MKDIR} -p ${OBJECTDIR}/src/cu
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/physicsSimulation.o src/cu/physicsSimulation.cu
+	$(COMPILE.c) ${OBJECTDIR}/src/cu/physicsSimulation.o src/cu/physicsSimulation.cu
 
 ${OBJECTDIR}/src/cu/safemem.o: src/cu/safemem.cu 
 	${MKDIR} -p ${OBJECTDIR}/src/cu
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Xcompiler "-MMD -MP -MF $@.d" -o ${OBJECTDIR}/src/cu/safemem.o src/cu/safemem.cu
+	$(COMPILE.cc) ${OBJECTDIR}/src/cu/safemem.o src/cu/safemem.cu
+
+${OBJECTDIR}/src/cu/spinmap.o: src/cu/spinmap.cu 
+	${MKDIR} -p ${OBJECTDIR}/src/cu
+	$(COMPILE.c) ${OBJECTDIR}/src/cu/spinmap.o src/cu/spinmap.cu
 
 # Subprojects
 .build-subprojects:
@@ -121,7 +132,7 @@ ${OBJECTDIR}/src/cu/safemem.o: src/cu/safemem.cu
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gpuphysics-v2.exe
 
 # Subprojects
 .clean-subprojects:

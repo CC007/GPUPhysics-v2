@@ -92,10 +92,10 @@ __device__ void cudaCalcSpin(DataArray dataArray, SpinDataArray spinDataArray, i
 	spinDataArray->sy[iteration + 1] = matrix[1][0] * spinDataArray->sx[iteration] + matrix[1][1] * spinDataArray->sy[iteration] + matrix[1][2] * spinDataArray->sz[iteration];
 	spinDataArray->sz[iteration + 1] = matrix[2][0] * spinDataArray->sx[iteration] + matrix[2][1] * spinDataArray->sy[iteration] + matrix[2][2] * spinDataArray->sz[iteration];
 
-	// double divider = sqrt(spinDataArray->sx[iteration+1]^2 + spinDataArray->sy[iteration+1]^2 + spinDataArray->sz[iteration+1]^2)
-	// spinDataArray->sx[iteration+1] /= divider;
-	// spinDataArray->sy[iteration+1] /= divider;
-	// spinDataArray->sz[iteration+1] /= divider;
+	double divider = sqrt(spinDataArray->sx[iteration+1]^2 + spinDataArray->sy[iteration+1]^2 + spinDataArray->sz[iteration+1]^2)
+	spinDataArray->sx[iteration+1] /= divider;
+	spinDataArray->sy[iteration+1] /= divider;
+	spinDataArray->sz[iteration+1] /= divider;
 
 	for (i = 0; i < 3; i++) {
 		if (safeDeviceFree((void**) &(matrix[i]))) {
@@ -110,10 +110,10 @@ __device__ void cudaCalcSpin(DataArray dataArray, SpinDataArray spinDataArray, i
 
 __global__ void cudaKernel(DataArray dataArray, Map x, Map dx, Map y, Map dy, Map delta, Map phi, int particleCount, int iterationCount) {
 	int sizeX = gridDim.x;
-	int iteration = blockIdx.x;
+	int itX = blockIdx.x;
 	int sizeY = blockDim.x;
-	int idy = threadIdx.x;
-	for (int n = iteration * sizeY + idy; n < particleCount; n += sizeX * sizeY) {
+	int itY = threadIdx.x;
+	for (int n = itX * sizeY + itY; n < particleCount; n += sizeX * sizeY) {
 		for (int i = 0; i < iterationCount - 1; i++) {
 			cudaCalcData(&(dataArray[n]), i, x, &(dataArray[n].x[i + 1]));
 			cudaCalcData(&(dataArray[n]), i, dx, &(dataArray[n].dx[i + 1]));
@@ -127,10 +127,10 @@ __global__ void cudaKernel(DataArray dataArray, Map x, Map dx, Map y, Map dy, Ma
 
 __global__ void cudaSpinKernel(DataArray dataArray, SpinDataArray spinDataArray, Map x, Map dx, Map y, Map dy, Map delta, Map phi, SpinMap spinMap, int particleCount, int iterationCount) {
 	int sizeX = gridDim.x;
-	int iteration = blockIdx.x;
+	int itX = blockIdx.x;
 	int sizeY = blockDim.x;
-	int idy = threadIdx.x;
-	for (int n = iteration * sizeY + idy; n < particleCount; n += sizeX * sizeY) {
+	int itY = threadIdx.x;
+	for (int n = itX * sizeY + itY; n < particleCount; n += sizeX * sizeY) {
 		for (int i = 0; i < iterationCount - 1; i++) {
 			cudaCalcData(&(dataArray[n]), i, x, &(dataArray[n].x[i + 1]));
 			cudaCalcData(&(dataArray[n]), i, dx, &(dataArray[n].dx[i + 1]));

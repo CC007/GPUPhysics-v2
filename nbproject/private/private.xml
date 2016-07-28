@@ -7,11 +7,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/data.cu</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/safemem.cu</file>
             <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/kernel.cu</file>
             <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/physicsSimulation.cu</file>
-            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/resources/map/mapsy7.dat</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/c/extendedio.c</file>
+            <file>file:/D:/Local/My%20Documents/NetBeansProjects/CUDA/GPUPhysics-v2/src/cu/spinmap.cu</file>
         </group>
     </open-files>
 </project-private>

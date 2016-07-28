@@ -12,11 +12,12 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+#include <stdio.h>
 
 	void eprintf(const char *format, ... );
 	void wprintf(const char *format, ... );
 	void iprintf(const char *format, ... );
-
+	void printBinaryDouble(FILE *stream, double d);
 
 #ifdef	__cplusplus
 }

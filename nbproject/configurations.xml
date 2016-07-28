@@ -40,14 +40,14 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="src" displayName="src" projectFiles="true">
-        <logicalFolder name="cc" displayName="c" projectFiles="true">
-          <itemPath>src/cc/data.c</itemPath>
-          <itemPath>src/cc/extendedio.c</itemPath>
-          <itemPath>src/cc/kernel.c</itemPath>
-          <itemPath>src/cc/map.c</itemPath>
-          <itemPath>src/cc/properties.c</itemPath>
-          <itemPath>src/cc/safemem.c</itemPath>
-          <itemPath>src/cc/spinmap.c</itemPath>
+        <logicalFolder name="c" displayName="c" projectFiles="true">
+          <itemPath>src/c/data.c</itemPath>
+          <itemPath>src/c/extendedio.c</itemPath>
+          <itemPath>src/c/kernel.c</itemPath>
+          <itemPath>src/c/map.c</itemPath>
+          <itemPath>src/c/properties.c</itemPath>
+          <itemPath>src/c/safemem.c</itemPath>
+          <itemPath>src/c/spinmap.c</itemPath>
         </logicalFolder>
         <logicalFolder name="cu" displayName="cu" projectFiles="true">
           <itemPath>src/cu/data.cu</itemPath>
@@ -152,19 +152,19 @@
       </item>
       <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/data.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/extendedio.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/extendedio.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/kernel.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/kernel.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/map.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/properties.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/safemem.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/safemem.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/spinmap.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/spinmap.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
       </item>
@@ -261,19 +261,19 @@
       </item>
       <item path="recources/map/mapsy7.dat" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/cc/data.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/data.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/extendedio.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/extendedio.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/kernel.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/kernel.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/map.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/map.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/properties.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/properties.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/safemem.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/safemem.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/cc/spinmap.c" ex="false" tool="0" flavor2="0">
+      <item path="src/c/spinmap.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/cu/data.cu" ex="false" tool="1" flavor2="0">
       </item>
